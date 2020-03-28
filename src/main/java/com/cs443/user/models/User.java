@@ -1,0 +1,118 @@
+package com.cs443.user.models;
+
+import com.cs443.urlshortener.models.Link;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
+
+@Data
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
+    private Integer id;
+
+    @Column(name = "user_name")
+    @Length(min = 5, max = 15)
+    private String userName;
+
+    @ManyToOne
+    @JoinColumn(name="business_id", nullable=false)
+    private Business businessId;
+
+    @Column(name = "password")
+    @Length(min = 8)
+    private String password;
+
+    @Column(name = "total_links_visited", columnDefinition = "int default 0")
+    private int totalLinks;
+
+    @Column(name = "isB2C")
+    private boolean isB2C;
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="user_id")
+    private List<Link> linkList;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public User setId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public User setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public User setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public boolean isB2C() {
+        return isB2C;
+    }
+
+    public User setB2C(boolean b2C) {
+        isB2C = b2C;
+        return this;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public User setRoles(Set<Role> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public List<Link> getLinkList() {
+        return linkList;
+    }
+
+    public User setLinkList(List<Link> linkList) {
+        this.linkList = linkList;
+        return this;
+    }
+
+    public int getTotalLinks() {
+        return totalLinks;
+    }
+
+    public User setTotalLinks(int totalLinks) {
+        this.totalLinks = totalLinks;
+        return this;
+    }
+
+    public Business getBusinessId() {
+        return businessId;
+    }
+
+    public User setBusinessId(Business businessId) {
+        this.businessId = businessId;
+        return this;
+    }
+}

@@ -1,4 +1,4 @@
-package com.cs443.urlshortener;
+package com.cs443;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
