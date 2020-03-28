@@ -30,9 +30,9 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests()
                     .antMatchers("/login").permitAll()
-                    .antMatchers("/register").permitAll()
-                    .antMatchers("/admin/**").hasAuthority("ADMIN")
-                    .antMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
+                    .antMatchers("/api/v1/register").permitAll()
+                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN", "USER")
                     .anyRequest()
                     .authenticated()
                 .and()
@@ -40,13 +40,13 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
                         .disable()
                     .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/user")
+                    .defaultSuccessUrl("/api/v1/user")
                     .usernameParameter("user_name")
                     .passwordParameter("password")
                 .and()
                     .logout()
                     .logoutUrl("/logout")
-                    .logoutSuccessUrl("/user")
+                    .logoutSuccessUrl("/api/v1/user")
                 .and()
                     .exceptionHandling();
     }

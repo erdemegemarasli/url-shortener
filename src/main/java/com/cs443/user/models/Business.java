@@ -3,7 +3,6 @@ package com.cs443.user.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
@@ -20,10 +19,6 @@ public class Business {
 
     @Column(name = "apiKey")
     private String apiKey;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="business_id")
-    private List<User> userList;
 
     @Column(name = "total_right_used", columnDefinition = "int default 0")
     private int totalRightsUsed;
@@ -46,15 +41,6 @@ public class Business {
 
     public Business setApiKey(String apiKey) {
         this.apiKey = apiKey;
-        return this;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public Business setUserList(List<User> userList) {
-        this.userList = userList;
         return this;
     }
 

@@ -1,11 +1,9 @@
 package com.cs443.user.models;
 
-import com.cs443.urlshortener.models.Link;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -39,10 +37,6 @@ public class User {
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="user_id")
-    private List<Link> linkList;
 
     public Integer getId() {
         return id;
@@ -86,15 +80,6 @@ public class User {
 
     public User setRoles(Set<Role> roles) {
         this.roles = roles;
-        return this;
-    }
-
-    public List<Link> getLinkList() {
-        return linkList;
-    }
-
-    public User setLinkList(List<Link> linkList) {
-        this.linkList = linkList;
         return this;
     }
 

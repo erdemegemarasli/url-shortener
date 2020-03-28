@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RequestMapping("api/v1/shortURL")
+@RequestMapping("api/v1")
 @RestController
 public class UserController {
 
