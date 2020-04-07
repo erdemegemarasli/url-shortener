@@ -1,5 +1,6 @@
 package com.cs443.user.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -16,6 +17,7 @@ public class User {
     @Column(name = "user_id")
     private Integer id;
 
+    @JsonProperty("userName")
     @Column(name = "user_name")
     @Length(min = 5, max = 15)
     private String userName;
@@ -24,15 +26,13 @@ public class User {
     @JoinColumn(name="business_id", nullable=false)
     private Business businessId;
 
+    @JsonProperty("password")
     @Column(name = "password")
     @Length(min = 8)
     private String password;
 
     @Column(name = "total_links_visited", columnDefinition = "int default 0")
     private int totalLinks;
-
-    @Column(name = "isB2C")
-    private boolean isB2C;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -62,15 +62,6 @@ public class User {
 
     public User setPassword(String password) {
         this.password = password;
-        return this;
-    }
-
-    public boolean isB2C() {
-        return isB2C;
-    }
-
-    public User setB2C(boolean b2C) {
-        isB2C = b2C;
         return this;
     }
 

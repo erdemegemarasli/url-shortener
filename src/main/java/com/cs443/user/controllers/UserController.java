@@ -9,8 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RequestMapping("api/v1")
 @RestController
 public class UserController {
@@ -18,8 +16,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/register")
-    public ResponseEntity<String> createNewUser(@Valid User user, @RequestParam(required = false, defaultValue = "") String apiKey) {
+    @PostMapping(value = "/register/{API_KEY}")
+    public ResponseEntity<String> createNewUserWithAPI(@RequestBody User user, @PathVariable("API_KEY") String api_key) {
         User existingUser = userService.findUserByUserName(user.getUserName());
         String message = "User created";
         HttpStatus httpStatus = HttpStatus.CREATED;
@@ -29,7 +27,24 @@ public class UserController {
             httpStatus = HttpStatus.BAD_REQUEST;
         }
         else {
-            userService.saveUser(user, apiKey);
+            userService.saveUser(user, api_key);
+        }
+
+        return new ResponseEntity<>(message, httpStatus);
+    }
+
+    @PostMapping(value = "/register")
+    public ResponseEntity<String> createNewUser(@RequestBody User user) {
+        User existingUser = userService.findUserByUserName(user.getUserName());
+        String message = "User created";
+        HttpStatus httpStatus = HttpStatus.CREATED;
+
+        if (existingUser != null) {
+            message = "There is already a user registered with the user name provided";
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        else {
+            userService.saveUser(user);
         }
 
         return new ResponseEntity<>(message, httpStatus);
@@ -48,5 +63,4 @@ public class UserController {
         User user = userService.findUserByUserName(auth.getName());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
 }

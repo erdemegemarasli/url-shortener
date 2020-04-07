@@ -30,7 +30,8 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests()
                     .antMatchers("/login").permitAll()
-                    .antMatchers("/api/v1/register").permitAll()
+                    .antMatchers("/api/v1/register/**").permitAll()
+                    .antMatchers("/api/v1/shortURL").permitAll()
                     .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                     .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN", "USER")
                     .anyRequest()
@@ -52,7 +53,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");

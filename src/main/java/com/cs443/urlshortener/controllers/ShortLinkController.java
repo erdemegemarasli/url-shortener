@@ -2,14 +2,13 @@ package com.cs443.urlshortener.controllers;
 
 import com.cs443.urlshortener.models.Link;
 import com.cs443.urlshortener.services.LinkService;
+import com.cs443.user.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequestMapping("api/v1/shortURL")
 @RestController
@@ -36,7 +35,21 @@ public class ShortLinkController {
     @GetMapping
     public List<Link> getAllShortURLs() {
         //  todo return all short URLs
-        return null;
+
+        List<Link> links = new ArrayList<>();
+        Date date = new Date();
+        System.out.println();
+
+        User user = new User();
+        user.setId(4);
+        user.setUserName("Ztan");
+        user.setPassword("1235679");
+
+        links.add(new Link(user, "Link1", "URL1", date.toString(), date.toString(), 0));
+        links.add(new Link(user, "Link2", "URL2", date.toString(), date.toString(), 0));
+        links.add(new Link(user, "Link3", "URL3", date.toString(), date.toString(), 0));
+
+        return links;
     }
 
     @GetMapping(path = "{id}")
@@ -52,6 +65,6 @@ public class ShortLinkController {
 
     @PutMapping(path = "{id}")
     public void updateShortURLById(@PathVariable("id") UUID id, @Valid @NonNull @RequestBody Link newShortURL) {
-
+        System.out.println(id.toString());
     }
 }

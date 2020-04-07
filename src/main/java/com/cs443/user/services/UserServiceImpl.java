@@ -33,21 +33,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User saveUser(User user) {
+        Role userRole = roleRepository.findByRole("USER");
+        Business business = businessRepository.findByApiKey("Anonymous");
+
+        user
+                .setPassword(bCryptPasswordEncoder.encode(user.getPassword()))
+                .setRoles(new HashSet<>(Collections.singletonList(userRole)))
+                .setBusinessId(business);
+
+        return userRepository.save(user);
+    }
+
+    @Override
     public User saveUser(User user, String apiKey) {
         Role userRole = roleRepository.findByRole("USER");
         Business business = businessRepository.findByApiKey(apiKey);
-        boolean isB2C = false;
 
-        // todo: su an business_id foreign key oldugu icin null olamiyor. o yuzden default bir sirketi bulup ona atiyorum b2c oldugu zaman. bu design'i guzellestirebiliriz.
-        if (business == null){
-            business = businessRepository.findById(1).get();
-            isB2C = true;
+        if (business == null) {
+            business = businessRepository.findByApiKey("Anonymous");
         }
 
         user
                 .setPassword(bCryptPasswordEncoder.encode(user.getPassword()))
                 .setRoles(new HashSet<>(Collections.singletonList(userRole)))
-                .setB2C(isB2C)
                 .setBusinessId(business);
 
         return userRepository.save(user);

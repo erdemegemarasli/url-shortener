@@ -4,7 +4,6 @@ import com.cs443.user.models.User;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
@@ -34,6 +33,15 @@ public class Link {
 
     @Column(name = "visit_count", columnDefinition = "int default 0")
     private int visitCount;
+
+    public Link(User userId, String shortLink, String longLink, String timeToLive, String createDate, int visitCount) {
+        this.userId = userId;
+        this.shortLink = shortLink;
+        this.longLink = longLink;
+        this.timeToLive = timeToLive;
+        this.createDate = createDate;
+        this.visitCount = visitCount;
+    }
 
     public Integer getId() {
         return id;
