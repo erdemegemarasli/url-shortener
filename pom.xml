@@ -11,16 +11,18 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.cs443</groupId>
-    <artifactId>url-shortener</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>url-shortener</name>
-    <description>URL shortener using Spring Boot</description>
-
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
     </properties>
+
+    <groupId>com.cs443</groupId>
+    <artifactId>bilshort</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>bilshort</name>
+    <description>URL shortener using Spring Boot</description>
 
     <dependencies>
         <dependency>
@@ -31,6 +33,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
 
         <dependency>
@@ -83,7 +91,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>login-tutorial</finalName>
+        <finalName>Bilshort</finalName>
 
         <plugins>
             <plugin>

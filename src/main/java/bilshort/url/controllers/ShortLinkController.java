@@ -5,6 +5,8 @@ import bilshort.url.services.LinkService;
 import bilshort.user.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +37,12 @@ public class ShortLinkController {
     @GetMapping
     public List<Link> getAllShortURLs() {
         //  todo return all short URLs
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Username: " + username);
+
+        for (GrantedAuthority ga : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+            System.out.println(ga.getAuthority());
+        }
 
         List<Link> links = new ArrayList<>();
         Date date = new Date();
