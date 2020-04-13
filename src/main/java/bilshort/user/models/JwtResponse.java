@@ -4,14 +4,16 @@ import java.io.Serializable;
 
 public class JwtResponse implements Serializable {
 
-    private static final long serialVersionUID = -8091879091924046844L;
-    private final String jwttoken;
+    // https://stackoverflow.com/questions/285793/what-is-a-serialversionuid-and-why-should-i-use-it
+    private static final long serialVersionUID = 4639291821255008610L;
 
-    public JwtResponse(String jwttoken) {
-        this.jwttoken = jwttoken;
+    private final String jwtToken;
+
+    public JwtResponse(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 
     public String getToken() {
-        return this.jwttoken;
+        return this.jwtToken;
     }
 }

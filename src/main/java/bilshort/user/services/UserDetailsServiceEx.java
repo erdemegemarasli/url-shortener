@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-public class BilshortUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceEx implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;

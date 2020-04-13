@@ -1,6 +1,5 @@
 package bilshort.user.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -17,7 +16,6 @@ public class User {
     @Column(name = "user_id")
     private Integer id;
 
-    @JsonProperty("userName")
     @Column(name = "user_name")
     @Length(min = 5, max = 15)
     private String userName;
@@ -26,7 +24,6 @@ public class User {
     @JoinColumn(name="business_id", nullable=false)
     private Business businessId;
 
-    @JsonProperty("password")
     @Column(name = "password")
     @Length(min = 8)
     private String password;

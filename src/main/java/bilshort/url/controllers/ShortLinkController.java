@@ -38,11 +38,12 @@ public class ShortLinkController {
     public List<Link> getAllShortURLs() {
         //  todo return all short URLs
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("Username: " + username);
+        boolean isUser  = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
-        for (GrantedAuthority ga : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
-            System.out.println(ga.getAuthority());
-        }
+        System.out.println("Username: " + username);
+        System.out.println("Is User: " + isUser);
+        System.out.println("Is Admin: " + isAdmin);
 
         List<Link> links = new ArrayList<>();
         Date date = new Date();

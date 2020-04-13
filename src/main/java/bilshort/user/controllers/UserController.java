@@ -4,9 +4,8 @@ import bilshort.user.models.JwtRequest;
 import bilshort.user.models.JwtResponse;
 import bilshort.user.models.User;
 import bilshort.user.security.JwtTokenUtil;
-import bilshort.user.services.BilshortUserDetailsService;
+import bilshort.user.services.UserDetailsServiceEx;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,10 +25,10 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private BilshortUserDetailsService bilshortUserDetailsService;
+    private UserDetailsServiceEx bilshortUserDetailsService;
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -39,48 +38,37 @@ public class UserController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @PostMapping(value = "/register/{API_KEY}")
-    public ResponseEntity<String> createNewUserWithAPI(@RequestBody User user, @PathVariable("API_KEY") String api_key) {
-        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(user.getUserName());
-
-        String message = "User created";
-        HttpStatus httpStatus = HttpStatus.CREATED;
-
-        if (existingUser != null) {
-            message = "There is already a user registered with the user name provided";
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
-        else {
-            bilshortUserDetailsService.save(user, api_key);
-        }
-
-        return new ResponseEntity<>(message, httpStatus);
-    }
-
     @PostMapping(value = "/register")
-    public ResponseEntity<String> createNewUser(@RequestBody User user) {
-        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(user.getUserName());
-
-        String message = "User created";
-        HttpStatus httpStatus = HttpStatus.CREATED;
+    public ResponseEntity<?> createNewUser(@RequestBody JwtRequest registrationRequest) {
+        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(registrationRequest.getUsername());
 
         if (existingUser != null) {
-            message = "There is already a user registered with the user name provided";
+            return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
+        }
+
+        User user = new User();
+        user.setUserName(registrationRequest.getUsername());
+        user.setPassword(registrationRequest.getPassword());
+
+        String apiKey = registrationRequest.getApiKey();
+
+        if (apiKey == null) {
+            return ResponseEntity.ok(bilshortUserDetailsService.save(user));
         }
         else {
-            bilshortUserDetailsService.save(user);
+            return ResponseEntity.ok(bilshortUserDetailsService.save(user, apiKey));
         }
-
-        return new ResponseEntity<>(message, httpStatus);
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
+            System.out.println("User is disabled.");
+            //throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            System.out.println("User credentials are wrong.");
+            //throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 }
