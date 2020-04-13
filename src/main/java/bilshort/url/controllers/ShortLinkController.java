@@ -5,7 +5,6 @@ import bilshort.url.services.LinkService;
 import bilshort.user.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +50,7 @@ public class ShortLinkController {
 
         User user = new User();
         user.setId(4);
-        user.setUserName("Ztan");
+        user.setUsername("Ztan");
         user.setPassword("1235679");
 
         links.add(new Link(user, "Link1", "URL1", date.toString(), date.toString(), 0));

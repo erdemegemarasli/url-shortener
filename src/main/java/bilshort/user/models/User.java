@@ -18,7 +18,7 @@ public class User {
 
     @Column(name = "user_name")
     @Length(min = 5, max = 15)
-    private String userName;
+    private String username;
 
     @ManyToOne
     @JoinColumn(name="business_id", nullable=false)
@@ -44,12 +44,12 @@ public class User {
         return this;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public User setUserName(String userName) {
-        this.userName = userName;
+    public User setUsername(String username) {
+        this.username = username;
         return this;
     }
 

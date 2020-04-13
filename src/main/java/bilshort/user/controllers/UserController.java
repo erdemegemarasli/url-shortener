@@ -47,7 +47,7 @@ public class UserController {
         }
 
         User user = new User();
-        user.setUserName(registrationRequest.getUsername());
+        user.setUsername(registrationRequest.getUsername());
         user.setPassword(registrationRequest.getPassword());
 
         String apiKey = registrationRequest.getApiKey();

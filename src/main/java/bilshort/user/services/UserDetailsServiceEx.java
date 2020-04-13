@@ -41,7 +41,7 @@ public class UserDetailsServiceEx implements UserDetailsService {
             return null;
 
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), true, true, true, true, authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
     }
 
     public User save(User user) {
