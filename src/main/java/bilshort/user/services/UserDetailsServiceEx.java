@@ -35,7 +35,7 @@ public class UserDetailsServiceEx implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUserName(username);
+        User user = userRepository.findByUsername(username);
 
         if (user == null)
             return null;
