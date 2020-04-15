@@ -1,4 +1,4 @@
-package bilshort.url;
+package bilshort.link;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

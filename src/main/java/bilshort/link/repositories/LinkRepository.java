@@ -1,6 +1,6 @@
-package bilshort.url.repositories;
+package bilshort.link.repositories;
 
-import bilshort.url.models.Link;
+import bilshort.link.models.Link;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

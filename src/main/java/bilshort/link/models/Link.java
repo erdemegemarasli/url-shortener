@@ -1,8 +1,8 @@
-package bilshort.url.models;
+package bilshort.link.models;
 
 import bilshort.user.models.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Data
@@ -15,16 +15,19 @@ public class Link {
     @Column(name = "link_id")
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", nullable=false)
     private User userId;
 
+    @JsonProperty
     @Column(name = "short_link")
     private String shortLink;
 
+    @JsonProperty
     @Column(name = "long_link")
     private String longLink;
 
+    @JsonProperty
     @Column(name = "time_to_live")
     private String timeToLive;
 
@@ -33,6 +36,9 @@ public class Link {
 
     @Column(name = "visit_count", columnDefinition = "int default 0")
     private int visitCount;
+
+    public Link() {
+    }
 
     public Link(User userId, String shortLink, String longLink, String timeToLive, String createDate, int visitCount) {
         this.userId = userId;

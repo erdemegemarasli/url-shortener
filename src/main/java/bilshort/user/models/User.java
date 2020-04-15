@@ -1,8 +1,8 @@
 package bilshort.user.models;
 
+
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
 import java.util.Set;
 
