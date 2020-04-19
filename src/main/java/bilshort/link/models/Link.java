@@ -1,7 +1,6 @@
 package bilshort.link.models;
 
 import bilshort.user.models.User;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import javax.persistence.*;
 
@@ -13,21 +12,18 @@ public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "link_id")
-    private Integer id;
+    private Integer linkId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", nullable=false)
     private User userId;
 
-    @JsonProperty
     @Column(name = "short_link")
     private String shortLink;
 
-    @JsonProperty
     @Column(name = "long_link")
     private String longLink;
 
-    @JsonProperty
     @Column(name = "time_to_live")
     private String timeToLive;
 
@@ -49,12 +45,12 @@ public class Link {
         this.visitCount = visitCount;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getLinkId() {
+        return linkId;
     }
 
-    public Link setId(Integer id) {
-        this.id = id;
+    public Link setLinkId(Integer linkId) {
+        this.linkId = linkId;
         return this;
     }
 
