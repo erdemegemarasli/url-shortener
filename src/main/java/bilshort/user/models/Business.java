@@ -6,32 +6,32 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "businesses")
+@Table(name = "business")
 public class Business {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "business_id")
-    private Integer id;
+    private Integer businessId;
 
     @Column(name = "business_name")
     private String businessName;
 
-    @Column(name = "apiKey")
+    @Column(name = "api_key")
     private String apiKey;
 
-    @Column(name = "total_right_used", columnDefinition = "int default 0")
+    @Column(name = "total_rights_used", columnDefinition = "int default 0")
     private int totalRightsUsed;
 
-    @Column(name = "max_rights_usable", columnDefinition = "int default 10")
-    private int maxRightsUsable;
+    @Column(name = "max_rights_available", columnDefinition = "int default 10")
+    private int maxRightsAvailable;
 
-    public Integer getId() {
-        return id;
+    public Integer getBusinessId() {
+        return businessId;
     }
 
-    public Business setId(Integer id) {
-        this.id = id;
+    public Business setBusinessId(Integer businessId) {
+        this.businessId = businessId;
         return this;
     }
 
@@ -62,12 +62,12 @@ public class Business {
         return this;
     }
 
-    public int getMaxRightsUsable() {
-        return maxRightsUsable;
+    public int getMaxRightsAvailable() {
+        return maxRightsAvailable;
     }
 
-    public Business setMaxRightsUsable(int maxRightsUsable) {
-        this.maxRightsUsable = maxRightsUsable;
+    public Business setMaxRightsAvailable(int maxRightsAvailable) {
+        this.maxRightsAvailable = maxRightsAvailable;
         return this;
     }
 }

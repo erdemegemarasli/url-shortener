@@ -21,12 +21,12 @@ public class LinkServiceImpl implements LinkService {
     @Override
     public Link createShortLink(LinkDTO linkDTO) {
         Link link = new Link();
-        link.setLongLink(linkDTO.getLongUrl());
-        link.setTimeToLive(linkDTO.getExpTime());
+        link.setUrl(linkDTO.getLongUrl());
+        link.setExpTime(linkDTO.getExpTime());
         //Desc ekle
-        link.setUserId(userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
+        link.setOwner(userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()));
         //Sonra düzelt
-        link.setShortLink(linkDTO.getShortUrl());
+        link.setCode(linkDTO.getShortUrl());
         return linkRepository.save(link);
     }
 

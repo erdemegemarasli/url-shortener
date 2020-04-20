@@ -35,17 +35,17 @@ public class UserDetailsServiceEx implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUserName(username);
 
         if (user == null)
             return null;
 
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), true, true, true, true, authorities);
     }
 
     public User save(User user) {
-        Role userRole = roleRepository.findByRole("USER");
+        Role userRole = roleRepository.findByRoleName("USER");
         Business business = businessRepository.findByApiKey("Anonymous");
 
         user.setPassword(passwordEncoder.encode(user.getPassword()))
@@ -56,7 +56,7 @@ public class UserDetailsServiceEx implements UserDetailsService {
     }
 
     public User save(User user, String apiKey) {
-        Role userRole = roleRepository.findByRole("USER");
+        Role userRole = roleRepository.findByRoleName("USER");
         Business business = businessRepository.findByApiKey(apiKey);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()))
@@ -69,7 +69,7 @@ public class UserDetailsServiceEx implements UserDetailsService {
     private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
         Set<GrantedAuthority> roles = new HashSet<>();
         for (Role role : userRoles) {
-            roles.add(new SimpleGrantedAuthority(role.getRole()));
+            roles.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
         return new ArrayList<>(roles);
     }

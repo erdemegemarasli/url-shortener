@@ -11,15 +11,14 @@ import java.util.List;
 
 @Repository
 public interface LinkRepository extends JpaRepository<Link, Integer> {
-    Link findByShortLink(String shortLink);
 
     Link findByLinkId(Integer linkId);
 
     @Transactional
     Long deleteByLinkId(Integer linkId);
 
-    @Query(
-            value = "SELECT * FROM links l WHERE l.user_id = :ownerId",
-            nativeQuery = true)
+    @Transactional
+    @Query(value = "SELECT * FROM link l WHERE l.owner_id = :ownerId", nativeQuery = true)
     List<Link> findByUserIdEx(@Param("ownerId") Integer ownerId);
+
 }

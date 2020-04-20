@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "links")
+@Table(name = "link")
 public class Link {
 
     @Id
@@ -14,21 +14,24 @@ public class Link {
     @Column(name = "link_id")
     private Integer linkId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="user_id", nullable=false)
-    private User userId;
+    @ManyToOne
+    @JoinColumn(name="owner_id", nullable=false)
+    private User owner;
 
-    @Column(name = "short_link")
-    private String shortLink;
+    @Column(name = "code")
+    private String code;
 
-    @Column(name = "long_link")
-    private String longLink;
+    @Column(name = "url")
+    private String url;
 
-    @Column(name = "time_to_live")
-    private String timeToLive;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "create_date")
-    private String createDate;
+    @Column(name = "exp_time")
+    private String expTime;
+
+    @Column(name = "created_at")
+    private String createdAt;
 
     @Column(name = "visit_count", columnDefinition = "int default 0")
     private int visitCount;
@@ -36,75 +39,67 @@ public class Link {
     public Link() {
     }
 
-    public Link(User userId, String shortLink, String longLink, String timeToLive, String createDate, int visitCount) {
-        this.userId = userId;
-        this.shortLink = shortLink;
-        this.longLink = longLink;
-        this.timeToLive = timeToLive;
-        this.createDate = createDate;
-        this.visitCount = visitCount;
-    }
-
     public Integer getLinkId() {
         return linkId;
     }
 
-    public Link setLinkId(Integer linkId) {
+    public void setLinkId(Integer linkId) {
         this.linkId = linkId;
-        return this;
     }
 
-    public String getShortLink() {
-        return shortLink;
+    public User getOwner() {
+        return owner;
     }
 
-    public Link setShortLink(String shortLink) {
-        this.shortLink = shortLink;
-        return this;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
-    public String getLongLink() {
-        return longLink;
+    public String getCode() {
+        return code;
     }
 
-    public Link setLongLink(String longLink) {
-        this.longLink = longLink;
-        return this;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getTimeToLive() {
-        return timeToLive;
+    public String getUrl() {
+        return url;
     }
 
-    public Link setTimeToLive(String timeToLive) {
-        this.timeToLive = timeToLive;
-        return this;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getExpTime() {
+        return expTime;
+    }
+
+    public void setExpTime(String expTime) {
+        this.expTime = expTime;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public int getVisitCount() {
         return visitCount;
     }
 
-    public Link setVisitCount(int visitCount) {
+    public void setVisitCount(int visitCount) {
         this.visitCount = visitCount;
-        return this;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public Link setCreateDate(String createDate) {
-        this.createDate = createDate;
-        return this;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public Link setUserId(User userId) {
-        this.userId = userId;
-        return this;
     }
 }
