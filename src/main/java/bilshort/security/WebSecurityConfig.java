@@ -1,4 +1,4 @@
-package bilshort.user.security;
+package bilshort.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -64,10 +64,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/v1/register/**").permitAll()
-                    .antMatchers("/api/v1/authenticate").permitAll()
-                    .antMatchers("/r/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/v1/shortURL").permitAll()
+                .antMatchers("/api/v1/register/**").permitAll()
+                .antMatchers("/api/v1/authenticate").permitAll()
+                .antMatchers("/r/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/shortURL").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

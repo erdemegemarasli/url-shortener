@@ -29,7 +29,6 @@ public class LinkServiceImpl implements LinkService {
         link.setDescription(linkDTO.getDescription());
         link.setExpTime(linkDTO.getExpTime());
         link.setCode(linkDTO.getCode());
-        link.setVisitCount(0);
 
         Date date = new Date();
 
@@ -38,13 +37,13 @@ public class LinkServiceImpl implements LinkService {
             calendar.setTime(date);
             calendar.add(Calendar.DATE, 7);
 
-            link.setExpTime("" + calendar.getTime().getTime());
+            link.setExpTime(calendar.getTime().getTime());
         }
         else {
             link.setExpTime(linkDTO.getExpTime());
         }
 
-        link.setCreatedAt("" + date.getTime());
+        link.setCreatedAt(date.getTime());
 
         if (linkDTO.getUserName().equals("anonymousUser")) {
             User user = new User();

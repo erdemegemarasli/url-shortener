@@ -1,74 +1,86 @@
 package bilshort.user.controllers;
 
-import bilshort.user.models.JwtRequest;
-import bilshort.user.models.JwtResponse;
 import bilshort.user.models.User;
-import bilshort.user.security.JwtTokenUtil;
-import bilshort.user.services.UserDetailsServiceEx;
+import bilshort.user.models.UserDTO;
+import bilshort.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.lang.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("api/v1")
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@RequestMapping("api/v1/user")
 @RestController
 public class UserController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private UserService userService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    @PostMapping
+    public ResponseEntity<?> createUser(@RequestBody @NonNull UserDTO userDTO) {
 
-    @Autowired
-    private UserDetailsServiceEx bilshortUserDetailsService;
-
-    @PostMapping(value = "/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
-
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
-        final UserDetails userDetails = bilshortUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
-    }
-
-    @PostMapping(value = "/register")
-    public ResponseEntity<?> createNewUser(@RequestBody JwtRequest registrationRequest) {
-        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(registrationRequest.getUsername());
-
-        if (existingUser != null) {
-            return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
+        if (userService.loadUserByUsername(userDTO.getUserName()) != null) {
+            return ResponseEntity.badRequest().body("Already existing user!");
         }
 
         User user = new User();
-        user.setUserName(registrationRequest.getUsername());
-        user.setPassword(registrationRequest.getPassword());
+        user.setUserName(userDTO.getUserName());
+        user.setPassword(userDTO.getPassword());
+        user.setEmail(userDTO.getEmail());
 
-        String apiKey = registrationRequest.getApiKey();
-
-        if (apiKey == null) {
-            return ResponseEntity.ok(bilshortUserDetailsService.save(user));
-        }
-        else {
-            return ResponseEntity.ok(bilshortUserDetailsService.save(user, apiKey));
-        }
+        return ResponseEntity.ok(userService.save(user, userDTO.getAdmin()));
     }
 
-    private void authenticate(String username, String password) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            System.out.println("User is disabled.");
-            //throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            System.out.println("User credentials are wrong.");
-            //throw new Exception("INVALID_CREDENTIALS", e);
+    @GetMapping
+    public ResponseEntity<?> getAllUsers(@RequestParam Map<String, String> params) {
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
+
+        List<UserDTO> users = new ArrayList<>();
+
+        if (params.isEmpty()) {
+            for (User user : userService.getAllUsers()) {
+                UserDTO tempUser = new UserDTO();
+
+                tempUser.setUserName(user.getUserName());
+                tempUser.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+                tempUser.setEmail(user.getEmail());
+                tempUser.setMaxRightsAvailable(user.getMaxRightsAvailable());
+                tempUser.setTotalRightsUsed(user.getTotalRightsUsed());
+                tempUser.setApiKey(user.getApiKey());
+
+                users.add(tempUser);
+            }
+        }
+
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
+
+
+
+
+        return ResponseEntity.ok(null);
+    }
+
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable("id") int id) {
+
+        return ResponseEntity.ok(null);
+    }
+
+    @PutMapping(path = "{id}")
+    public ResponseEntity<?> updateUserById(@PathVariable("id") int id, @RequestBody @NonNull UserDTO userDTO) {
+
+        return ResponseEntity.ok(null);
     }
 }

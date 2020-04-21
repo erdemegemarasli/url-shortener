@@ -1,4 +1,4 @@
-package bilshort.user.security;
+package bilshort.security;
 
 import java.io.IOException;
 import java.io.Serializable;

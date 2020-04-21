@@ -19,9 +19,9 @@ public class User {
     @Length(min = 5, max = 16)
     private String userName;
 
-    @ManyToOne
-    @JoinColumn(name="business_id", nullable = false)
-    private Business businessId;
+    @Column(name = "email", unique = true)
+    @Length(min = 5, max = 64)
+    private String email;
 
     @Column(name = "password")
     @Length(min = 8)
@@ -30,6 +30,15 @@ public class User {
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @Column(name = "api_key")
+    private String apiKey;
+
+    @Column(name = "total_rights_used", columnDefinition = "int default 0")
+    private int totalRightsUsed;
+
+    @Column(name = "max_rights_available", columnDefinition = "int default 10")
+    private int maxRightsAvailable;
 
     public Integer getUserId() {
         return userId;
@@ -67,12 +76,35 @@ public class User {
         return this;
     }
 
-    public Business getBusinessId() {
-        return businessId;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public User setBusinessId(Business businessId) {
-        this.businessId = businessId;
-        return this;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public int getTotalRightsUsed() {
+        return totalRightsUsed;
+    }
+
+    public void setTotalRightsUsed(int totalRightsUsed) {
+        this.totalRightsUsed = totalRightsUsed;
+    }
+
+    public int getMaxRightsAvailable() {
+        return maxRightsAvailable;
+    }
+
+    public void setMaxRightsAvailable(int maxRightsAvailable) {
+        this.maxRightsAvailable = maxRightsAvailable;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

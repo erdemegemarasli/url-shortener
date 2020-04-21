@@ -8,7 +8,7 @@ public class LinkDTO implements Serializable {
     private static final long serialVersionUID = 3385324889163774845L;
 
     private String url;
-    private String expTime;
+    private Long expTime;
     private String code;
     private String description;
     private Integer linkId;
@@ -41,11 +41,11 @@ public class LinkDTO implements Serializable {
         this.url = url;
     }
 
-    public String getExpTime() {
+    public Long getExpTime() {
         return expTime;
     }
 
-    public void setExpTime(String expTime) {
+    public void setExpTime(Long expTime) {
         this.expTime = expTime;
     }
 

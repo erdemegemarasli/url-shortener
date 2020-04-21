@@ -1,23 +1,23 @@
 package bilshort.user.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
-public class JwtRequest implements Serializable {
+public class AuthDTO implements Serializable {
 
     // https://stackoverflow.com/questions/285793/what-is-a-serialversionuid-and-why-should-i-use-it
     private static final long serialVersionUID = 7048489224107438116L;
 
     private String username;
     private String password;
-    private String apiKey;
+    private String token;
 
-    public JwtRequest() {
+    public AuthDTO() {
     }
 
-    public JwtRequest(String username, String password, String apiKey) {
-        this.setUsername(username);
-        this.setPassword(password);
-        this.setApiKey(apiKey);
+    public AuthDTO(String token) {
+        this.token = token;
     }
 
     public String getUsername() {
@@ -36,11 +36,11 @@ public class JwtRequest implements Serializable {
         this.password = password;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public String getToken() {
+        return token;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

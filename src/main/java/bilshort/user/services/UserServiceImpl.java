@@ -1,9 +1,8 @@
 package bilshort.user.services;
 
-import bilshort.user.models.Business;
+import bilshort.user.models.AuthDTO;
 import bilshort.user.models.Role;
 import bilshort.user.models.User;
-import bilshort.user.repositories.BusinessRepository;
 import bilshort.user.repositories.RoleRepository;
 import bilshort.user.repositories.UserRepository;
 
@@ -11,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-public class UserDetailsServiceEx implements UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -27,10 +25,32 @@ public class UserDetailsServiceEx implements UserDetailsService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private BusinessRepository businessRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public User createUser(AuthDTO authDTO) {
+        return save(new User().setUserName(authDTO.getUsername()).setPassword(authDTO.getPassword()));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User getUserById(Integer id) {
+        return userRepository.findByUserId(id);
+    }
+
+    @Override
+    public Long deleteUserById(Integer id) {
+        return userRepository.deleteByUserId(id);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
 
     @Override
     @Transactional
@@ -46,23 +66,22 @@ public class UserDetailsServiceEx implements UserDetailsService {
 
     public User save(User user) {
         Role userRole = roleRepository.findByRoleName("USER");
-        Business business = businessRepository.findByApiKey("Anonymous");
 
         user.setPassword(passwordEncoder.encode(user.getPassword()))
-                .setRoles(new HashSet<>(Collections.singletonList(userRole)))
-                .setBusinessId(business);
+                .setRoles(new HashSet<>(Collections.singletonList(userRole)));
 
         return userRepository.save(user);
     }
 
-    public User save(User user, String apiKey) {
-        Role userRole = roleRepository.findByRoleName("USER");
-        Business business = businessRepository.findByApiKey(apiKey);
+    @Override
+    public User save(User user, Boolean isAdmin) {
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByRoleName("USER"));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()))
-                .setRoles(new HashSet<>(Collections.singletonList(userRole)))
-                .setBusinessId(business);
+        if (isAdmin)
+            roles.add(roleRepository.findByRoleName("ADMIN"));
 
+        user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(roles);
         return userRepository.save(user);
     }
 

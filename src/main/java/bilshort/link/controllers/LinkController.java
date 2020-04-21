@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@RequestMapping("api/v1/shortURL")
+@RequestMapping("api/v1/link")
 @RestController
-public class ShortLinkController {
+public class LinkController {
 
     @Autowired
     private LinkService linkService;
@@ -24,18 +24,6 @@ public class ShortLinkController {
     boolean isUser  = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
     boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 */
-
-    private String generateRandomCode() {
-        for (int i = 0; i < 10; i++) {
-            String randomCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
-
-            if (linkService.getLinkByCode(randomCode) == null) {
-                return randomCode;
-            }
-        }
-
-        return null;
-    }
 
     @PostMapping
     public ResponseEntity<?> createShortLink(@RequestBody @NonNull LinkDTO linkDTO) {
@@ -209,5 +197,17 @@ public class ShortLinkController {
         response.setDescription(link.getDescription());
 
         return ResponseEntity.ok(response);
+    }
+
+    private String generateRandomCode() {
+        for (int i = 0; i < 10; i++) {
+            String randomCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
+
+            if (linkService.getLinkByCode(randomCode) == null) {
+                return randomCode;
+            }
+        }
+
+        return null;
     }
 }
