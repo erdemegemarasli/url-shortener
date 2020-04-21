@@ -3,6 +3,7 @@ package bilshort.link.controllers;
 import bilshort.link.models.Link;
 import bilshort.link.models.LinkDTO;
 import bilshort.link.services.LinkService;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -24,18 +25,67 @@ public class ShortLinkController {
     boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 */
 
+    private String generateRandomCode() {
+        for (int i = 0; i < 10; i++) {
+            String randomCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
+
+            if (linkService.getLinkByCode(randomCode) == null) {
+                return randomCode;
+            }
+        }
+
+        return null;
+    }
+
     @PostMapping
-    public LinkDTO createShortLink(@RequestBody @NonNull LinkDTO linkDTO) {
+    public ResponseEntity<?> createShortLink(@RequestBody @NonNull LinkDTO linkDTO) {
+        UrlValidator urlValidator = new UrlValidator();
+
+        String url = linkDTO.getUrl();
+
+        if (url.length() < 8) {
+            url = "http://" + url;
+        }
+        else if (!url.substring(0, 8).equals("https://") && !url.substring(0, 7).equals("http://")) {
+            url = "http://" + url;
+        }
+
+        linkDTO.setUrl(url);
+
+        if (!urlValidator.isValid(linkDTO.getUrl())) {
+            return ResponseEntity.badRequest().body("Given URL is invalid!");
+        }
+
+        if (linkDTO.getCode() == null) { // Random
+            String randomCode = generateRandomCode();
+
+            if (randomCode == null) {
+                return ResponseEntity.badRequest().body("Unexpected Error!");
+            }
+            else {
+                linkDTO.setCode(randomCode);
+            }
+        }
+        else { // Custom
+            if (linkService.getLinkByCode(linkDTO.getCode()) == null) {
+                linkDTO.setCode(linkDTO.getCode());
+            }
+            else {
+                return ResponseEntity.badRequest().body("Custom URL already exists!");
+            }
+        }
+
+        linkDTO.setUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         Link link = linkService.createShortLink(linkDTO);
 
         LinkDTO response = new LinkDTO();
         response.setExpTime(link.getExpTime());
-        response.setLongUrl(link.getUrl());
-        response.setShortUrl(link.getCode());
-        response.setId(link.getLinkId());
-        response.setDescription(null);
+        response.setUrl(link.getUrl());
+        response.setCode(link.getCode());
+        response.setLinkId(link.getLinkId());
+        response.setDescription(link.getDescription());
 
-        return response;
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
@@ -53,11 +103,11 @@ public class ShortLinkController {
                 LinkDTO tempLink = new LinkDTO();
 
                 tempLink.setExpTime(link.getExpTime());
-                tempLink.setLongUrl(link.getUrl());
-                tempLink.setShortUrl(link.getCode());
-                tempLink.setId(link.getLinkId());
-                tempLink.setUsername(link.getOwner().getUserName());
-                tempLink.setDescription(null);
+                tempLink.setUrl(link.getUrl());
+                tempLink.setCode(link.getCode());
+                tempLink.setLinkId(link.getLinkId());
+                tempLink.setUserName(link.getOwner().getUserName());
+                tempLink.setDescription(link.getDescription());
 
                 links.add(tempLink);
             }
@@ -72,11 +122,11 @@ public class ShortLinkController {
                     LinkDTO tempLink = new LinkDTO();
 
                     tempLink.setExpTime(link.getExpTime());
-                    tempLink.setLongUrl(link.getUrl());
-                    tempLink.setShortUrl(link.getCode());
-                    tempLink.setId(link.getLinkId());
-                    tempLink.setUsername(link.getOwner().getUserName());
-                    tempLink.setDescription(null);
+                    tempLink.setUrl(link.getUrl());
+                    tempLink.setCode(link.getCode());
+                    tempLink.setLinkId(link.getLinkId());
+                    tempLink.setUserName(link.getOwner().getUserName());
+                    tempLink.setDescription(link.getDescription());
 
                     links.add(tempLink);
                 }
@@ -101,11 +151,11 @@ public class ShortLinkController {
         LinkDTO response = new LinkDTO();
 
         response.setExpTime(link.getExpTime());
-        response.setLongUrl(link.getUrl());
-        response.setShortUrl(link.getCode());
-        response.setId(link.getLinkId());
-        response.setUsername(link.getOwner().getUserName());
-        response.setDescription(null);
+        response.setUrl(link.getUrl());
+        response.setCode(link.getCode());
+        response.setLinkId(link.getLinkId());
+        response.setUserName(link.getOwner().getUserName());
+        response.setDescription(link.getDescription());
 
         return ResponseEntity.ok(response);
     }
@@ -143,20 +193,20 @@ public class ShortLinkController {
         }
 
         Link link = linkService.getLinkById(id);
-        link.setCode(linkDTO.getShortUrl());
+        link.setCode(linkDTO.getCode());
         link.setExpTime(linkDTO.getExpTime());
-        link.setUrl(linkDTO.getLongUrl());
+        link.setUrl(linkDTO.getUrl());
 
         link = linkService.updateLink(link);
 
         LinkDTO response = new LinkDTO();
 
         response.setExpTime(link.getExpTime());
-        response.setLongUrl(link.getUrl());
-        response.setShortUrl(link.getCode());
-        response.setId(link.getLinkId());
-        response.setUsername(link.getOwner().getUserName());
-        response.setDescription(null);
+        response.setUrl(link.getUrl());
+        response.setCode(link.getCode());
+        response.setLinkId(link.getLinkId());
+        response.setUserName(link.getOwner().getUserName());
+        response.setDescription(link.getDescription());
 
         return ResponseEntity.ok(response);
     }

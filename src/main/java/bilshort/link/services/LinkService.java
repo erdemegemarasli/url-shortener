@@ -12,4 +12,5 @@ public interface LinkService {
     Long deleteLinkById(Integer id);
     Link updateLink(Link link);
     List<Link> getLinksByUserId(Integer userId);
+    Link getLinkByCode(String code);
 }

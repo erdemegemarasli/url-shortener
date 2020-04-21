@@ -14,6 +14,8 @@ public interface LinkRepository extends JpaRepository<Link, Integer> {
 
     Link findByLinkId(Integer linkId);
 
+    Link findByCode(String code);
+
     @Transactional
     Long deleteByLinkId(Integer linkId);
 
