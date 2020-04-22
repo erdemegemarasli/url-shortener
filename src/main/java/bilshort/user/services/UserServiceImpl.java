@@ -1,6 +1,5 @@
 package bilshort.user.services;
 
-import bilshort.user.models.AuthDTO;
 import bilshort.user.models.Role;
 import bilshort.user.models.User;
 import bilshort.user.repositories.RoleRepository;
@@ -28,11 +27,6 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User createUser(AuthDTO authDTO) {
-        return save(new User().setUserName(authDTO.getUsername()).setPassword(authDTO.getPassword()));
-    }
-
-    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -48,11 +42,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUserName(username);
@@ -64,12 +53,10 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), true, true, true, true, authorities);
     }
 
+    @Override
     public User save(User user) {
         Role userRole = roleRepository.findByRoleName("USER");
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()))
-                .setRoles(new HashSet<>(Collections.singletonList(userRole)));
-
+        user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(new HashSet<>(Collections.singletonList(userRole)));
         return userRepository.save(user);
     }
 

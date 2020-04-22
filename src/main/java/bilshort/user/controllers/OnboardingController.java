@@ -30,11 +30,11 @@ public class OnboardingController {
     private UserService bilshortUserDetailsService;
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthDTO authenticationRequest) {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthDTO authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        authenticate(authenticationRequest.getUserName(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = bilshortUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = bilshortUserDetailsService.loadUserByUsername(authenticationRequest.getUserName());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthDTO(token));
@@ -42,28 +42,26 @@ public class OnboardingController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> createNewUser(@RequestBody AuthDTO registrationRequest) {
-        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(registrationRequest.getUsername());
+        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(registrationRequest.getUserName());
 
         if (existingUser != null) {
             return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
         }
 
-        User user = new User();
-        user.setUserName(registrationRequest.getUsername())
-            .setPassword(registrationRequest.getPassword());
+        User user = new User().setUserName(registrationRequest.getUserName())
+                .setEmail(registrationRequest.getUserName())
+                .setPassword(registrationRequest.getPassword());
 
         return ResponseEntity.ok(bilshortUserDetailsService.save(user));
     }
 
-    private void authenticate(String username, String password) {
+    private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            System.out.println("User is disabled.");
-            //throw new Exception("USER_DISABLED", e);
+            throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            System.out.println("User credentials are wrong.");
-            //throw new Exception("INVALID_CREDENTIALS", e);
+            throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 }

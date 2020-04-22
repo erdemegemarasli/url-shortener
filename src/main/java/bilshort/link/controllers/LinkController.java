@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.util.*;
 
 @RequestMapping("api/v1/link")
@@ -136,6 +137,10 @@ public class LinkController {
 
         Link link = linkService.getLinkById(id);
 
+        if (link == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         LinkDTO response = new LinkDTO();
 
         response.setExpTime(link.getExpTime());
@@ -167,7 +172,6 @@ public class LinkController {
         }
 
         return ResponseEntity.badRequest().body("Unexpected Error");
-
     }
 
     @PutMapping(path = "{id}")
@@ -181,6 +185,11 @@ public class LinkController {
         }
 
         Link link = linkService.getLinkById(id);
+
+        if (link == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         link.setCode(linkDTO.getCode());
         link.setExpTime(linkDTO.getExpTime());
         link.setUrl(linkDTO.getUrl());

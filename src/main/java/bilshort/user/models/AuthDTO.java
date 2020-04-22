@@ -1,15 +1,16 @@
 package bilshort.user.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthDTO implements Serializable {
 
     // https://stackoverflow.com/questions/285793/what-is-a-serialversionuid-and-why-should-i-use-it
     private static final long serialVersionUID = 7048489224107438116L;
 
-    private String username;
+    private String userName;
     private String password;
     private String token;
 
@@ -20,12 +21,12 @@ public class AuthDTO implements Serializable {
         this.token = token;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getUserName() {
+        return this.userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {

@@ -1,7 +1,10 @@
 package bilshort.user.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = 7838351376229501972L;

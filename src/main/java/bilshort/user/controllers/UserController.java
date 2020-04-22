@@ -2,6 +2,7 @@ package bilshort.user.controllers;
 
 import bilshort.user.models.User;
 import bilshort.user.models.UserDTO;
+import bilshort.user.services.RoleService;
 import bilshort.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody @NonNull UserDTO userDTO) {
 
@@ -32,7 +36,17 @@ public class UserController {
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
 
-        return ResponseEntity.ok(userService.save(user, userDTO.getAdmin()));
+        user = userService.save(user, userDTO.getAdmin());
+
+        UserDTO response = new UserDTO();
+        response.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        response.setUserName(user.getUserName());
+        response.setEmail(user.getEmail());
+        response.setApiKey(user.getApiKey());
+        response.setTotalRightsUsed(user.getTotalRightsUsed());
+        response.setMaxRightsAvailable(user.getMaxRightsAvailable());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
@@ -65,22 +79,84 @@ public class UserController {
 
     @GetMapping(path = "{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
+        if (!isAdmin) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
 
+        User user = userService.getUserById(id);
 
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return ResponseEntity.ok(null);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserName(user.getUserName());
+        userDTO.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        userDTO.setEmail(user.getEmail());
+        userDTO.setMaxRightsAvailable(user.getMaxRightsAvailable());
+        userDTO.setTotalRightsUsed(user.getTotalRightsUsed());
+        userDTO.setApiKey(user.getApiKey());
+
+        return ResponseEntity.ok(userDTO);
     }
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") int id) {
 
-        return ResponseEntity.ok(null);
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        Long operationCode = userService.deleteUserById(id);
+
+        if (operationCode == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        else if (operationCode == 1) {
+            return ResponseEntity.ok().body("Deletion Successful");
+        }
+
+        return ResponseEntity.badRequest().body("Unexpected Error");
     }
 
     @PutMapping(path = "{id}")
     public ResponseEntity<?> updateUserById(@PathVariable("id") int id, @RequestBody @NonNull UserDTO userDTO) {
 
-        return ResponseEntity.ok(null);
+        boolean isUser = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin && !isUser) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        User user = userService.getUserById(id);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        user.setEmail(userDTO.getEmail());
+        user.setUserName(userDTO.getUserName());
+        user.setPassword(userDTO.getPassword());
+        user.setApiKey(userDTO.getApiKey());
+        user.setMaxRightsAvailable(userDTO.getMaxRightsAvailable());
+        user.setTotalRightsUsed(userDTO.getTotalRightsUsed());
+
+        user.setRoles(user.getRoles());
+        user = userService.save(user, userDTO.getAdmin());
+
+        UserDTO response = new UserDTO();
+        response.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        response.setUserName(user.getUserName());
+        response.setEmail(user.getEmail());
+        response.setApiKey(user.getApiKey());
+        response.setTotalRightsUsed(user.getTotalRightsUsed());
+        response.setMaxRightsAvailable(user.getMaxRightsAvailable());
+
+        return ResponseEntity.ok(response);
     }
 }

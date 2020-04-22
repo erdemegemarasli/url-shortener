@@ -1,7 +1,10 @@
 package bilshort.link.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LinkDTO implements Serializable {
 
     // https://stackoverflow.com/questions/285793/what-is-a-serialversionuid-and-why-should-i-use-it
