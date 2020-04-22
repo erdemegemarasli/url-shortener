@@ -28,43 +28,43 @@ public class Link {
     private String description;
 
     @Column(name = "exp_time")
-    private long expTime;
+    private Long expTime;
 
     @Column(name = "created_at")
-    private long createdAt;
+    private Long createdAt;
 
     @Column(name = "visited_count_from_chrome", columnDefinition = "int default 0")
-    private int visitCountFromChrome;
+    private Integer visitCountFromChrome;
 
     @Column(name = "visited_count_from_firefox", columnDefinition = "int default 0")
-    private int visitCountFromFirefox;
+    private Integer visitCountFromFirefox;
 
     @Column(name = "visited_count_from_safari", columnDefinition = "int default 0")
-    private int visitCountFromSafari;
+    private Integer visitCountFromSafari;
 
     @Column(name = "visited_count_from_ie", columnDefinition = "int default 0")
-    private int visitCountFromIE;
+    private Integer visitCountFromIE;
 
     @Column(name = "visited_count_from_other_browser", columnDefinition = "int default 0")
-    private int visitCountFromOtherBrowser;
+    private Integer visitCountFromOtherBrowser;
 
     @Column(name = "visited_count_from_windows", columnDefinition = "int default 0")
-    private int visitCountFromWindows;
+    private Integer visitCountFromWindows;
 
     @Column(name = "visited_count_from_osx", columnDefinition = "int default 0")
-    private int visitCountFromOsx;
+    private Integer visitCountFromOsx;
 
     @Column(name = "visited_count_from_linux", columnDefinition = "int default 0")
-    private int visitCountFromLinux;
+    private Integer visitCountFromLinux;
 
     @Column(name = "visited_count_from_ios", columnDefinition = "int default 0")
-    private int visitCountFromIOS;
+    private Integer visitCountFromIOS;
 
     @Column(name = "visited_count_from_android", columnDefinition = "int default 0")
-    private int visitCountFromAndroid;
+    private Integer visitCountFromAndroid;
 
     @Column(name = "visited_count_from_other_os", columnDefinition = "int default 0")
-    private int visitCountFromOtherOs;
+    private Integer visitCountFromOtherOs;
 
     public Link() {
     }
@@ -109,107 +109,107 @@ public class Link {
         this.description = description;
     }
 
-    public long getExpTime() {
+    public Long getExpTime() {
         return expTime;
     }
 
-    public void setExpTime(long expTime) {
+    public void setExpTime(Long expTime) {
         this.expTime = expTime;
     }
 
-    public long getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public int getVisitCountFromChrome() {
+    public Integer getVisitCountFromChrome() {
         return visitCountFromChrome;
     }
 
-    public void setVisitCountFromChrome(int visitCountFromChrome) {
+    public void setVisitCountFromChrome(Integer visitCountFromChrome) {
         this.visitCountFromChrome = visitCountFromChrome;
     }
 
-    public int getVisitCountFromFirefox() {
+    public Integer getVisitCountFromFirefox() {
         return visitCountFromFirefox;
     }
 
-    public void setVisitCountFromFirefox(int visitCountFromFirefox) {
+    public void setVisitCountFromFirefox(Integer visitCountFromFirefox) {
         this.visitCountFromFirefox = visitCountFromFirefox;
     }
 
-    public int getVisitCountFromSafari() {
+    public Integer getVisitCountFromSafari() {
         return visitCountFromSafari;
     }
 
-    public void setVisitCountFromSafari(int visitCountFromSafari) {
+    public void setVisitCountFromSafari(Integer visitCountFromSafari) {
         this.visitCountFromSafari = visitCountFromSafari;
     }
 
-    public int getVisitCountFromIE() {
+    public Integer getVisitCountFromIE() {
         return visitCountFromIE;
     }
 
-    public void setVisitCountFromIE(int visitCountFromIE) {
+    public void setVisitCountFromIE(Integer visitCountFromIE) {
         this.visitCountFromIE = visitCountFromIE;
     }
 
-    public int getVisitCountFromOtherBrowser() {
+    public Integer getVisitCountFromOtherBrowser() {
         return visitCountFromOtherBrowser;
     }
 
-    public void setVisitCountFromOtherBrowser(int visitCountFromOtherBrowser) {
+    public void setVisitCountFromOtherBrowser(Integer visitCountFromOtherBrowser) {
         this.visitCountFromOtherBrowser = visitCountFromOtherBrowser;
     }
 
-    public int getVisitCountFromWindows() {
+    public Integer getVisitCountFromWindows() {
         return visitCountFromWindows;
     }
 
-    public void setVisitCountFromWindows(int visitCountFromWindows) {
+    public void setVisitCountFromWindows(Integer visitCountFromWindows) {
         this.visitCountFromWindows = visitCountFromWindows;
     }
 
-    public int getVisitCountFromOsx() {
+    public Integer getVisitCountFromOsx() {
         return visitCountFromOsx;
     }
 
-    public void setVisitCountFromOsx(int visitCountFromOsx) {
+    public void setVisitCountFromOsx(Integer visitCountFromOsx) {
         this.visitCountFromOsx = visitCountFromOsx;
     }
 
-    public int getVisitCountFromLinux() {
+    public Integer getVisitCountFromLinux() {
         return visitCountFromLinux;
     }
 
-    public void setVisitCountFromLinux(int visitCountFromLinux) {
+    public void setVisitCountFromLinux(Integer visitCountFromLinux) {
         this.visitCountFromLinux = visitCountFromLinux;
     }
 
-    public int getVisitCountFromIOS() {
+    public Integer getVisitCountFromIOS() {
         return visitCountFromIOS;
     }
 
-    public void setVisitCountFromIOS(int visitCountFromIOS) {
+    public void setVisitCountFromIOS(Integer visitCountFromIOS) {
         this.visitCountFromIOS = visitCountFromIOS;
     }
 
-    public int getVisitCountFromAndroid() {
+    public Integer getVisitCountFromAndroid() {
         return visitCountFromAndroid;
     }
 
-    public void setVisitCountFromAndroid(int visitCountFromAndroid) {
+    public void setVisitCountFromAndroid(Integer visitCountFromAndroid) {
         this.visitCountFromAndroid = visitCountFromAndroid;
     }
 
-    public int getVisitCountFromOtherOs() {
+    public Integer getVisitCountFromOtherOs() {
         return visitCountFromOtherOs;
     }
 
-    public void setVisitCountFromOtherOs(int visitCountFromOtherOs) {
+    public void setVisitCountFromOtherOs(Integer visitCountFromOtherOs) {
         this.visitCountFromOtherOs = visitCountFromOtherOs;
     }
 }

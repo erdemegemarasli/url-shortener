@@ -3,6 +3,7 @@ package bilshort.link.controllers;
 import bilshort.link.models.Link;
 import bilshort.link.models.LinkDTO;
 import bilshort.link.services.LinkService;
+import bilshort.user.models.User;
 import bilshort.user.services.UserService;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,8 @@ public class LinkController {
 
     @GetMapping
     public ResponseEntity<?> getAllShortURLs(@RequestParam Map<String, String> params) {
+
+        boolean isUser = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
 
@@ -130,6 +133,9 @@ public class LinkController {
                     links.add(tempLink);
                 }
             }
+            else{
+                return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+            }
         }
 
         return ResponseEntity.ok(links);
@@ -141,14 +147,20 @@ public class LinkController {
         boolean isUser = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
+
         if (!isAdmin && !isUser) {
             return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
         Link link = linkService.getLinkById(id);
 
+
         if (link == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(link.getOwner().getUserName()) && !isAdmin){
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
         LinkDTO response = new LinkDTO();
@@ -169,6 +181,10 @@ public class LinkController {
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
         if (!isAdmin && !isUser) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(linkService.getLinkById(id).getOwner().getUserName()) && !isAdmin){
             return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
@@ -200,9 +216,25 @@ public class LinkController {
             return ResponseEntity.notFound().build();
         }
 
-        link.setCode(linkDTO.getCode());
-        link.setExpTime(linkDTO.getExpTime());
-        link.setUrl(linkDTO.getUrl());
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(link.getOwner().getUserName()) && !isAdmin){
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        if (linkDTO.getCode() != null){
+            link.setCode(linkDTO.getCode());
+        }
+
+        if (linkDTO.getExpTime() != null){
+            link.setExpTime(linkDTO.getExpTime());
+        }
+
+        if (linkDTO.getUrl() != null){
+            link.setUrl(linkDTO.getUrl());
+        }
+
+        if (linkDTO.getDescription() != null){
+            link.setDescription(linkDTO.getDescription());
+        }
 
         link = linkService.updateLink(link);
 
