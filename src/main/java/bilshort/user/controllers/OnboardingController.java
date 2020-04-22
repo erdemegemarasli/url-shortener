@@ -3,6 +3,7 @@ package bilshort.user.controllers;
 import bilshort.security.JwtTokenUtil;
 import bilshort.user.models.AuthDTO;
 import bilshort.user.models.User;
+import bilshort.user.models.UserDTO;
 import bilshort.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,32 +28,42 @@ public class OnboardingController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserService bilshortUserDetailsService;
+    private UserService userService;
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthDTO authenticationRequest) throws Exception {
 
         authenticate(authenticationRequest.getUserName(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = bilshortUserDetailsService.loadUserByUsername(authenticationRequest.getUserName());
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUserName());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthDTO(token));
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<?> createNewUser(@RequestBody AuthDTO registrationRequest) {
-        UserDetails existingUser = bilshortUserDetailsService.loadUserByUsername(registrationRequest.getUserName());
+    public ResponseEntity<?> createNewUser(@RequestBody AuthDTO authDTO) {
+        UserDetails existingUser = userService.loadUserByUsername(authDTO.getUserName());
 
         if (existingUser != null) {
             return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
         }
 
-        User user = new User().setUserName(registrationRequest.getUserName())
-                .setEmail(registrationRequest.getUserName())
-                .setPassword(registrationRequest.getPassword());
+        User user = new User().setUserName(authDTO.getUserName())
+                .setEmail(authDTO.getEmail())
+                .setPassword(authDTO.getPassword());
 
-        return ResponseEntity.ok(bilshortUserDetailsService.save(user));
+        user = userService.save(user);
+
+        UserDTO response = new UserDTO();
+        response.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        response.setUserName(user.getUserName());
+        response.setEmail(user.getEmail());
+        response.setApiKey(user.getApiKey());
+        response.setTotalRightsUsed(user.getTotalRightsUsed());
+        response.setMaxRightsAvailable(user.getMaxRightsAvailable());
+
+        return ResponseEntity.ok(response);
     }
 
     private void authenticate(String username, String password) throws Exception {

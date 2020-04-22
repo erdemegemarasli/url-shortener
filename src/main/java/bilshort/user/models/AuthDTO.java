@@ -11,6 +11,7 @@ public class AuthDTO implements Serializable {
     private static final long serialVersionUID = 7048489224107438116L;
 
     private String userName;
+    private String email;
     private String password;
     private String token;
 
@@ -22,26 +23,38 @@ public class AuthDTO implements Serializable {
     }
 
     public String getUserName() {
-        return this.userName;
+        return userName;
     }
 
-    public void setUserName(String userName) {
+    public AuthDTO setUserName(String userName) {
         this.userName = userName;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public AuthDTO setEmail(String email) {
+        this.email = email;
+        return this;
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
-    public void setPassword(String password) {
+    public AuthDTO setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public AuthDTO setToken(String token) {
         this.token = token;
+        return this;
     }
 }

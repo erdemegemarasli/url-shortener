@@ -3,6 +3,7 @@ package bilshort.user.models;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -15,14 +16,17 @@ public class User {
     @Column(name = "user_id")
     private Integer userId;
 
+    @NotNull
     @Column(name = "user_name")
     @Length(min = 5, max = 16)
     private String userName;
 
+    @NotNull
     @Column(name = "email", unique = true)
     @Length(min = 5, max = 64)
     private String email;
 
+    @NotNull
     @Column(name = "password")
     @Length(min = 8)
     private String password;
