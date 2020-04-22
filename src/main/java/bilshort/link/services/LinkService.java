@@ -13,4 +13,5 @@ public interface LinkService {
     Link updateLink(Link link);
     List<Link> getLinksByUserId(Integer userId);
     Link getLinkByCode(String code);
+    List<Link> getLinksByUserName(String userName);
 }

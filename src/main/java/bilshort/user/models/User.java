@@ -17,7 +17,7 @@ public class User {
     private Integer userId;
 
     @NotNull
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     @Length(min = 5, max = 16)
     private String userName;
 
@@ -28,7 +28,6 @@ public class User {
 
     @NotNull
     @Column(name = "password")
-    @Length(min = 8)
     private String password;
 
     @ManyToMany(cascade = CascadeType.MERGE)

@@ -13,6 +13,7 @@ public interface UserService extends UserDetailsService {
     Long deleteUserById(Integer id);
 
     UserDetails loadUserByUsername(String username);
-    User save(User user);
-    User save(User user, Boolean isAdmin);
+    User save(User user, Boolean isPasswordChanged);
+    User save(User user, Boolean isAdmin, Boolean isPasswordChanged);
+    User getUserByUserName(String userName);
 }

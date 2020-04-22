@@ -54,21 +54,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user) {
+    public User save(User user, Boolean isPasswordChanged) {
         Role userRole = roleRepository.findByRoleName("USER");
-        user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(new HashSet<>(Collections.singletonList(userRole)));
+        if (isPasswordChanged){
+            user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(new HashSet<>(Collections.singletonList(userRole)));
+        }
+        else{
+            user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+        }
+
         return userRepository.save(user);
     }
 
     @Override
-    public User save(User user, Boolean isAdmin) {
+    public User save(User user, Boolean isAdmin, Boolean isPasswordChanged) {
         HashSet<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByRoleName("USER"));
 
         if (isAdmin)
             roles.add(roleRepository.findByRoleName("ADMIN"));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(roles);
+        if (isPasswordChanged){
+            user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(roles);
+        }
+        else{
+            user.setRoles(roles);
+        }
         return userRepository.save(user);
     }
 
@@ -78,5 +89,10 @@ public class UserServiceImpl implements UserService {
             roles.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
         return new ArrayList<>(roles);
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 }

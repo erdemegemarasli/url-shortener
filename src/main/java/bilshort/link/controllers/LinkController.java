@@ -3,6 +3,7 @@ package bilshort.link.controllers;
 import bilshort.link.models.Link;
 import bilshort.link.models.LinkDTO;
 import bilshort.link.services.LinkService;
+import bilshort.user.services.UserService;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class LinkController {
 
     @Autowired
     private LinkService linkService;
+
+    @Autowired
+    private UserService userService;
 
 /*
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -81,12 +85,13 @@ public class LinkController {
     public ResponseEntity<?> getAllShortURLs(@RequestParam Map<String, String> params) {
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
-        if (!isAdmin) {
-            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
-        }
 
         List<LinkDTO> links = new ArrayList<>();
         if (params.isEmpty())  {
+
+            if (!isAdmin) {
+                return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+            }
 
             for (Link link : linkService.getAllLinks()) {
                 LinkDTO tempLink = new LinkDTO();
@@ -105,6 +110,11 @@ public class LinkController {
             if (params.containsKey("userId")) {
 
                 Integer userId = Integer.parseInt(params.get("userId"));
+
+                if (!isAdmin && userId != userService.getUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserId()){
+                    return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+                }
+
                 List<Link> linksByUserId = linkService.getLinksByUserId(userId);
 
                 for (Link link : linksByUserId) {

@@ -87,4 +87,9 @@ public class LinkServiceImpl implements LinkService {
     public Link getLinkByCode(String code) {
         return linkRepository.findByCode(code);
     }
+
+    @Override
+    public List<Link> getLinksByUserName(String userName) {
+        return linkRepository.findByUserNameEx(userName);
+    }
 }

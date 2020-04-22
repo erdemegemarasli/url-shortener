@@ -36,10 +36,11 @@ public class UserController {
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
 
-        user = userService.save(user, userDTO.getAdmin());
+        user = userService.save(user, userDTO.getIsAdmin(), true);
 
         UserDTO response = new UserDTO();
-        response.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        response.setUserId(user.getUserId());
+        response.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
         response.setUserName(user.getUserName());
         response.setEmail(user.getEmail());
         response.setApiKey(user.getApiKey());
@@ -63,8 +64,9 @@ public class UserController {
             for (User user : userService.getAllUsers()) {
                 UserDTO tempUser = new UserDTO();
 
+                tempUser.setUserId(user.getUserId());
                 tempUser.setUserName(user.getUserName());
-                tempUser.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+                tempUser.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
                 tempUser.setEmail(user.getEmail());
                 tempUser.setMaxRightsAvailable(user.getMaxRightsAvailable());
                 tempUser.setTotalRightsUsed(user.getTotalRightsUsed());
@@ -79,9 +81,10 @@ public class UserController {
 
     @GetMapping(path = "{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") Integer id) {
+        boolean isUser = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
-        if (!isAdmin) {
+        if (!isAdmin && !isUser) {
             return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
@@ -91,9 +94,14 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
+        if (!user.getUserName().equals(SecurityContextHolder.getContext().getAuthentication().getName()) && !isAdmin){
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
         UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
         userDTO.setUserName(user.getUserName());
-        userDTO.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        userDTO.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
         userDTO.setEmail(user.getEmail());
         userDTO.setMaxRightsAvailable(user.getMaxRightsAvailable());
         userDTO.setTotalRightsUsed(user.getTotalRightsUsed());
@@ -134,23 +142,63 @@ public class UserController {
         }
 
         User user = userService.getUserById(id);
+        Boolean isPasswordChanged = false;
 
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
-        user.setEmail(userDTO.getEmail());
-        user.setUserName(userDTO.getUserName());
-        user.setPassword(userDTO.getPassword());
-        user.setApiKey(userDTO.getApiKey());
-        user.setMaxRightsAvailable(userDTO.getMaxRightsAvailable());
-        user.setTotalRightsUsed(userDTO.getTotalRightsUsed());
 
-        user.setRoles(user.getRoles());
-        user = userService.save(user, userDTO.getAdmin());
+        if (!user.getUserName().equals(SecurityContextHolder.getContext().getAuthentication().getName()) && !isAdmin){
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        if (isAdmin){
+
+            if (userDTO.getApiKey() != null){
+                user.setApiKey(userDTO.getApiKey());
+            }
+
+            if (userDTO.getTotalRightsUsed() != null){
+                user.setTotalRightsUsed(userDTO.getTotalRightsUsed());
+            }
+
+            if (userDTO.getMaxRightsAvailable() != null){
+                user.setMaxRightsAvailable(userDTO.getMaxRightsAvailable());
+            }
+        }
+
+        if (userDTO.getEmail() != null){
+            user.setEmail(userDTO.getEmail());
+        }
+
+        if (userDTO.getUserName() != null){
+            user.setUserName(userDTO.getUserName());
+        }
+
+        if (userDTO.getPassword() != null){
+            isPasswordChanged = true;
+            user.setPassword(userDTO.getPassword());
+        }
+
+
+
+        if (userDTO.getIsAdmin() != null){
+            if (isAdmin){
+                user = userService.save(user, userDTO.getIsAdmin(), isPasswordChanged);
+            }
+            else{
+                return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+            }
+        }
+        else{
+            user = userService.save(user, isPasswordChanged);
+        }
+
 
         UserDTO response = new UserDTO();
-        response.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        response.setUserId(user.getUserId());
+        response.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
         response.setUserName(user.getUserName());
         response.setEmail(user.getEmail());
         response.setApiKey(user.getApiKey());

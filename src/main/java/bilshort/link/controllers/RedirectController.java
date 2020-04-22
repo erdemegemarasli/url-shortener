@@ -31,7 +31,7 @@ public class RedirectController {
 
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         String browser = ua.getBrowser().getName();
-        String os = ua.getBrowser().getName();
+        String os = ua.getOperatingSystem().getName();
 
         if (browser.contains("Chrome")) {
             link.setVisitCountFromChrome(link.getVisitCountFromChrome() + 1);

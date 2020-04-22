@@ -23,4 +23,7 @@ public interface LinkRepository extends JpaRepository<Link, Integer> {
     @Query(value = "SELECT * FROM link l WHERE l.owner_id = :ownerId", nativeQuery = true)
     List<Link> findByUserIdEx(@Param("ownerId") Integer ownerId);
 
+    @Transactional
+    @Query(value = "SELECT * FROM link l INNER JOIN user u ON l.owner_id = u.user_id WHERE u.user_name = :ownerName", nativeQuery = true)
+    List<Link> findByUserNameEx(@Param("ownerName") String ownerName);
 }

@@ -53,10 +53,11 @@ public class OnboardingController {
                 .setEmail(authDTO.getEmail())
                 .setPassword(authDTO.getPassword());
 
-        user = userService.save(user);
+        user = userService.save(user, true);
 
         UserDTO response = new UserDTO();
-        response.setAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+        response.setUserId(user.getUserId());
+        response.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
         response.setUserName(user.getUserName());
         response.setEmail(user.getEmail());
         response.setApiKey(user.getApiKey());

@@ -16,6 +16,7 @@ public class UserDTO implements Serializable {
     private Integer totalRightsUsed;
     private Integer maxRightsAvailable;
     private String apiKey;
+    private Integer userId;
 
     public UserDTO() {
     }
@@ -44,11 +45,11 @@ public class UserDTO implements Serializable {
         this.email = email;
     }
 
-    public Boolean getAdmin() {
+    public Boolean getIsAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(Boolean admin) {
+    public void setIsAdmin(Boolean admin) {
         isAdmin = admin;
     }
 
@@ -74,5 +75,13 @@ public class UserDTO implements Serializable {
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
