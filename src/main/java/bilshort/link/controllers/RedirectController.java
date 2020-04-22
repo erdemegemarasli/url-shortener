@@ -13,7 +13,6 @@ import ro.rasel.throttling.ThrottlingType;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RequestMapping("r")
