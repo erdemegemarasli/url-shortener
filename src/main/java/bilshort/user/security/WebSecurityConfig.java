@@ -64,11 +64,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/v1/register/**").permitAll()
+                    .antMatchers("/api/v1/**").permitAll()
                     .antMatchers("/api/v1/authenticate").permitAll()
                     .antMatchers("/r/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/shortURL").permitAll()
-                    .antMatchers("api/v1").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
