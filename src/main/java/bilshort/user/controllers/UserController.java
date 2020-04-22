@@ -6,6 +6,7 @@ import bilshort.user.models.User;
 import bilshort.user.security.JwtTokenUtil;
 import bilshort.user.services.UserDetailsServiceEx;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +27,11 @@ public class UserController {
 
     @Autowired
     private UserDetailsServiceEx bilshortUserDetailsService;
+
+    @GetMapping(value="")
+    public ResponseEntity<?> healthCheck(){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
