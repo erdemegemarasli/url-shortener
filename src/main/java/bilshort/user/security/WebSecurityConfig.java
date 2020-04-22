@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/v1/authenticate").permitAll()
                     .antMatchers("/r/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/shortURL").permitAll()
-                    .antMatchers("/").permitAll()
+                    .antMatchers("api/v1").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
