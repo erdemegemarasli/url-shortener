@@ -30,6 +30,7 @@ public class UserController {
 
     @GetMapping(value="")
     public ResponseEntity<?> healthCheck(){
+        System.out.println("LOGLOGLOGOLOGLOGLOGLOGLOLGOLOG: " + new ResponseEntity<>(HttpStatus.OK) );
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
