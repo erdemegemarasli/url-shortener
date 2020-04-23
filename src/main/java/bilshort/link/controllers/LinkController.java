@@ -3,7 +3,6 @@ package bilshort.link.controllers;
 import bilshort.link.models.Link;
 import bilshort.link.models.LinkDTO;
 import bilshort.link.services.LinkService;
-import bilshort.user.models.User;
 import bilshort.user.services.UserService;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RequestMapping("api/v1/link")
 @RestController
@@ -118,7 +119,7 @@ public class LinkController {
 
                 Integer userId = Integer.parseInt(params.get("userId"));
 
-                if (!isAdmin && userId != userService.getUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserId()){
+                if (!isAdmin && !userId.equals(userService.getUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserId())){
                     return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
                 }
 
