@@ -7,6 +7,7 @@ import bilshort.user.models.User;
 import bilshort.user.services.UserService;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,9 @@ import java.util.*;
 @RequestMapping("api/v1/link")
 @RestController
 public class LinkController {
+
+    @Value("${domain.host}")
+    private String domain;
 
     @Autowired
     private LinkService linkService;
@@ -75,7 +79,7 @@ public class LinkController {
         LinkDTO response = new LinkDTO();
         response.setExpTime(link.getExpTime());
         response.setUrl(link.getUrl());
-        response.setCode(link.getCode());
+        response.setCode(domain + link.getCode());
         response.setLinkId(link.getLinkId());
         response.setDescription(link.getDescription());
 
@@ -101,7 +105,7 @@ public class LinkController {
 
                 tempLink.setExpTime(link.getExpTime());
                 tempLink.setUrl(link.getUrl());
-                tempLink.setCode(link.getCode());
+                tempLink.setCode(domain + link.getCode());
                 tempLink.setLinkId(link.getLinkId());
                 tempLink.setUserName(link.getOwner().getUserName());
                 tempLink.setDescription(link.getDescription());
@@ -125,7 +129,7 @@ public class LinkController {
 
                     tempLink.setExpTime(link.getExpTime());
                     tempLink.setUrl(link.getUrl());
-                    tempLink.setCode(link.getCode());
+                    tempLink.setCode(domain + link.getCode());
                     tempLink.setLinkId(link.getLinkId());
                     tempLink.setUserName(link.getOwner().getUserName());
                     tempLink.setDescription(link.getDescription());
@@ -167,7 +171,7 @@ public class LinkController {
 
         response.setExpTime(link.getExpTime());
         response.setUrl(link.getUrl());
-        response.setCode(link.getCode());
+        response.setCode(domain + link.getCode());
         response.setLinkId(link.getLinkId());
         response.setUserName(link.getOwner().getUserName());
         response.setDescription(link.getDescription());
@@ -242,7 +246,7 @@ public class LinkController {
 
         response.setExpTime(link.getExpTime());
         response.setUrl(link.getUrl());
-        response.setCode(link.getCode());
+        response.setCode(domain + link.getCode());
         response.setLinkId(link.getLinkId());
         response.setUserName(link.getOwner().getUserName());
         response.setDescription(link.getDescription());

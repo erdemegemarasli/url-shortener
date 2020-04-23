@@ -33,38 +33,38 @@ public class Link {
     @Column(name = "created_at")
     private Long createdAt;
 
-    @Column(name = "visited_count_from_chrome", columnDefinition = "int default 0")
-    private Integer visitCountFromChrome;
+    @Column(name = "visited_count_from_chrome", columnDefinition = "integer default 0")
+    private Integer visitCountFromChrome = 0;
 
-    @Column(name = "visited_count_from_firefox", columnDefinition = "int default 0")
-    private Integer visitCountFromFirefox;
+    @Column(name = "visited_count_from_firefox", columnDefinition = "integer default 0")
+    private Integer visitCountFromFirefox = 0;
 
-    @Column(name = "visited_count_from_safari", columnDefinition = "int default 0")
-    private Integer visitCountFromSafari;
+    @Column(name = "visited_count_from_safari", columnDefinition = "integer default 0")
+    private Integer visitCountFromSafari = 0;
 
-    @Column(name = "visited_count_from_ie", columnDefinition = "int default 0")
-    private Integer visitCountFromIE;
+    @Column(name = "visited_count_from_ie", columnDefinition = "integer default 0")
+    private Integer visitCountFromIE = 0;
 
-    @Column(name = "visited_count_from_other_browser", columnDefinition = "int default 0")
-    private Integer visitCountFromOtherBrowser;
+    @Column(name = "visited_count_from_other_browser", columnDefinition = "integer default 0")
+    private Integer visitCountFromOtherBrowser = 0;
 
-    @Column(name = "visited_count_from_windows", columnDefinition = "int default 0")
-    private Integer visitCountFromWindows;
+    @Column(name = "visited_count_from_windows", columnDefinition = "integer default 0")
+    private Integer visitCountFromWindows = 0;
 
-    @Column(name = "visited_count_from_osx", columnDefinition = "int default 0")
-    private Integer visitCountFromOsx;
+    @Column(name = "visited_count_from_osx", columnDefinition = "integer default 0")
+    private Integer visitCountFromOsx = 0;
 
-    @Column(name = "visited_count_from_linux", columnDefinition = "int default 0")
-    private Integer visitCountFromLinux;
+    @Column(name = "visited_count_from_linux", columnDefinition = "integer default 0")
+    private Integer visitCountFromLinux = 0;
 
-    @Column(name = "visited_count_from_ios", columnDefinition = "int default 0")
-    private Integer visitCountFromIOS;
+    @Column(name = "visited_count_from_ios", columnDefinition = "integer default 0")
+    private Integer visitCountFromIOS = 0;
 
-    @Column(name = "visited_count_from_android", columnDefinition = "int default 0")
-    private Integer visitCountFromAndroid;
+    @Column(name = "visited_count_from_android", columnDefinition = "integer default 0")
+    private Integer visitCountFromAndroid = 0;
 
-    @Column(name = "visited_count_from_other_os", columnDefinition = "int default 0")
-    private Integer visitCountFromOtherOs;
+    @Column(name = "visited_count_from_other_os", columnDefinition = "integer default 0")
+    private Integer visitCountFromOtherOs = 0;
 
     public Link() {
     }
