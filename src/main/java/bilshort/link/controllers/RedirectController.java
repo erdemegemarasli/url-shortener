@@ -105,8 +105,6 @@ public class RedirectController {
         }
 
         linkService.updateLink(link);
-            jedisPublisher.cacheLink(link.getCode(), link.getUrl(), link.getVisitCount() + 1);
-
             try {
                 responseHeaders.setLocation(new URI(link.getUrl()));
             } catch (URISyntaxException e) {

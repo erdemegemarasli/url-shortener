@@ -47,7 +47,6 @@ public class JedisPublisher {
         Link link = linkRepository.findByCode(code);
 
         int visitCount = getVisitCountFromRedis(code);
-        link.setVisitCount(visitCount);
         linkRepository.save(link);
 
         deleteKeyWhenShadowExpired(code);
