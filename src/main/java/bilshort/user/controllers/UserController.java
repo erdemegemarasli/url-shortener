@@ -27,6 +27,12 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody @NonNull UserDTO userDTO) {
 
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
         if (userService.loadUserByUsername(userDTO.getUserName()) != null) {
             return ResponseEntity.badRequest().body("Already existing user!");
         }
@@ -36,7 +42,7 @@ public class UserController {
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
 
-        user = userService.save(user, userDTO.getIsAdmin(), true);
+        user = userService.save(user, false, true);
 
         UserDTO response = new UserDTO();
         response.setUserId(user.getUserId());
