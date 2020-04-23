@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import ro.rasel.throttling.Throttling;
+import ro.rasel.throttling.ThrottlingType;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @RequestMapping("r")
 @RestController
@@ -40,6 +43,7 @@ public class RedirectController {
         }).start();
     }
 
+    @Throttling(type = ThrottlingType.RemoteAddr, limit = 100, timeUnit = TimeUnit.MINUTES)
     @GetMapping("{code}")
     public ResponseEntity<String> redirectUrl(@PathVariable("code") String code, @RequestHeader(value = "User-Agent") String userAgent) {
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -72,6 +76,7 @@ public class RedirectController {
     }
 
 //    KEEP THIS FOR SPEED COMPARISON
+//    @Throttling(type = ThrottlingType.RemoteAddr, limit = 1, timeUnit = TimeUnit.SECONDS)
 //    @GetMapping("{code}")
 //    public ResponseEntity<String> redirectUrl(@PathVariable("code") String code, @RequestHeader(value = "User-Agent") String userAgent) {
 //        HttpHeaders responseHeaders = new HttpHeaders();
