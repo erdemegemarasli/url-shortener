@@ -67,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/register/**").permitAll()
                 .antMatchers("/api/v1/authenticate").permitAll()
                 .antMatchers("/r/**").permitAll()
+                .antMatchers("/healthCheck").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/link").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
