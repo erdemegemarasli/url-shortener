@@ -8,9 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.rasel.throttling.Throttling;
+import ro.rasel.throttling.ThrottlingType;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 @RequestMapping("r")
 @RestController
@@ -19,6 +22,7 @@ public class RedirectController {
     @Autowired
     private LinkService linkService;
 
+    @Throttling(type = ThrottlingType.RemoteAddr, limit = 100, timeUnit = TimeUnit.MINUTES)
     @GetMapping("{code}")
     public ResponseEntity<?> redirectUrl(@PathVariable("code") String code, @RequestHeader(value = "User-Agent") String userAgent) {
         HttpHeaders responseHeaders = new HttpHeaders();
