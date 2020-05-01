@@ -37,17 +37,58 @@ public class OnboardingController {
 
         final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUserName());
 
+        User user = userService.getUserByUserName(userDetails.getUsername());
+
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthDTO(token));
+        AuthDTO authDTO = new AuthDTO(token);
+        authDTO.setUserId(user.getUserId());
+        authDTO.setUserName(user.getUserName());
+        return ResponseEntity.ok(authDTO);
     }
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> createNewUser(@RequestBody AuthDTO authDTO) {
-        UserDetails existingUser = userService.loadUserByUsername(authDTO.getUserName());
+        authDTO.setUserId(null);
 
+        if (authDTO.getUserName() == null)
+        {
+            return ResponseEntity.badRequest().body("UserName can not be empty.");
+        }
+        if (authDTO.getEmail() == null)
+        {
+            return ResponseEntity.badRequest().body("Email can not be empty.");
+        }
+        if (authDTO.getPassword() == null)
+        {
+            return ResponseEntity.badRequest().body("Password can not be empty.");
+        }
+
+        if (!isValidEmail(authDTO.getEmail())){
+            return ResponseEntity.badRequest().body("Please enter a valid email.");
+        }
+
+        if (authDTO.getPassword().length() > 32 || authDTO.getPassword().length() < 8){
+            return ResponseEntity.badRequest().body("Password length must be between 8 and 32.");
+        }
+        if (authDTO.getUserName().length() > 16 || authDTO.getUserName().length() < 5){
+            return ResponseEntity.badRequest().body("Username length must be between 5 and 16.");
+        }
+        if (authDTO.getEmail().length() > 64 || authDTO.getEmail().length() < 5){
+            return ResponseEntity.badRequest().body("Email length must be between 5 and 64.");
+        }
+
+        UserDetails existingUser = userService.loadUserByUsername(authDTO.getUserName());
         if (existingUser != null) {
             return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
         }
+
+        if (userService.loadUserByEmail(authDTO.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("This email already registered.");
+        }
+
+
+
+
 
         User user = new User().setUserName(authDTO.getUserName())
                 .setEmail(authDTO.getEmail())
@@ -75,5 +116,10 @@ public class OnboardingController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
     }
 }

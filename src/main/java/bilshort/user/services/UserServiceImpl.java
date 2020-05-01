@@ -95,4 +95,15 @@ public class UserServiceImpl implements UserService {
     public User getUserByUserName(String userName) {
         return userRepository.findByUserName(userName);
     }
+
+    @Override
+    public UserDetails loadUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null)
+            return null;
+
+        List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), true, true, true, true, authorities);
+    }
 }

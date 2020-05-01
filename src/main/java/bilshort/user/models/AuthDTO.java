@@ -14,6 +14,7 @@ public class AuthDTO implements Serializable {
     private String email;
     private String password;
     private String token;
+    private Integer userId;
 
     public AuthDTO() {
     }
@@ -55,6 +56,15 @@ public class AuthDTO implements Serializable {
 
     public AuthDTO setToken(String token) {
         this.token = token;
+        return this;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public AuthDTO setUserId(Integer userId) {
+        this.userId = userId;
         return this;
     }
 }

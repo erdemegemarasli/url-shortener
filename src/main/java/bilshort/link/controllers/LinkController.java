@@ -40,6 +40,10 @@ public class LinkController {
     public ResponseEntity<?> createShortLink(@RequestBody @NonNull LinkDTO linkDTO) {
         UrlValidator urlValidator = new UrlValidator();
 
+        if (linkDTO.getUrl() == null){
+            return ResponseEntity.badRequest().body("URL cannot be empty.");
+        }
+
         String url = linkDTO.getUrl();
 
         if (url.length() < 8) {
@@ -67,6 +71,9 @@ public class LinkController {
         }
         else { // Custom
             if (linkService.getLinkByCode(linkDTO.getCode()) == null) {
+                if (linkDTO.getCode().length() == 0){
+                    return ResponseEntity.badRequest().body("Code cannot be empty.");
+                }
                 linkDTO.setCode(linkDTO.getCode());
             }
             else {
@@ -115,15 +122,34 @@ public class LinkController {
             }
         }
         else {
+
             if (params.containsKey("userId")) {
 
-                Integer userId = Integer.parseInt(params.get("userId"));
+                if (params.get("userId") == null){
+                    return ResponseEntity.badRequest().body("userId cannot be empty.");
+                }
+                if (params.get("userId").length() == 0){
+                    return ResponseEntity.badRequest().body("userId cannot be empty.");
+                }
+
+                Integer userId;
+
+                try {
+                    userId = Integer.parseInt(params.get("userId"));
+                } catch (NumberFormatException e) {
+                    return ResponseEntity.badRequest().body("userId must be an integer.");
+                }
+
 
                 if (!isAdmin && !userId.equals(userService.getUserByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserId())){
                     return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
                 }
 
                 List<Link> linksByUserId = linkService.getLinksByUserId(userId);
+
+                if (linksByUserId.isEmpty()){
+                    return ResponseEntity.notFound().build();
+                }
 
                 for (Link link : linksByUserId) {
                     LinkDTO tempLink = new LinkDTO();
@@ -208,6 +234,8 @@ public class LinkController {
     @PutMapping(path = "{id}")
     public ResponseEntity<?> updateShortURLById(@PathVariable("id") int id, @RequestBody @NonNull LinkDTO linkDTO) {
 
+        UrlValidator urlValidator = new UrlValidator();
+
         boolean isUser = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
@@ -226,6 +254,16 @@ public class LinkController {
         }
 
         if (linkDTO.getCode() != null){
+
+            if (linkService.getLinkByCode(linkDTO.getCode()) == null) {
+                if (linkDTO.getCode().length() == 0){
+                    return ResponseEntity.badRequest().body("Code cannot be empty.");
+                }
+                linkDTO.setCode(linkDTO.getCode());
+            }
+            else {
+                return ResponseEntity.badRequest().body("Custom URL already exists!");
+            }
             link.setCode(linkDTO.getCode());
         }
 
@@ -234,6 +272,22 @@ public class LinkController {
         }
 
         if (linkDTO.getUrl() != null){
+
+            String url = linkDTO.getUrl();
+
+            if (url.length() < 8) {
+                url = "http://" + url;
+            }
+            else if (!url.substring(0, 8).equals("https://") && !url.substring(0, 7).equals("http://")) {
+                url = "http://" + url;
+            }
+
+            linkDTO.setUrl(url);
+
+            if (!urlValidator.isValid(linkDTO.getUrl())) {
+                return ResponseEntity.badRequest().body("Given URL is invalid!");
+            }
+
             link.setUrl(linkDTO.getUrl());
         }
 

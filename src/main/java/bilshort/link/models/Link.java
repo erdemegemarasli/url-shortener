@@ -15,13 +15,13 @@ public class Link {
     private Integer linkId;
 
     @ManyToOne
-    @JoinColumn(name="owner_id", nullable=false)
+    @JoinColumn(name="owner_id", nullable = false)
     private User owner;
 
-    @Column(name = "code")
+    @Column(name = "code", nullable = false)
     private String code;
 
-    @Column(name = "url")
+    @Column(name = "url", nullable = false)
     private String url;
 
     @Column(name = "description")

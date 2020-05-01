@@ -1,6 +1,7 @@
 package bilshort.user.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 

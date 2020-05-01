@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,15 +28,48 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody @NonNull UserDTO userDTO) {
 
+        userDTO.setUserId(null);
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
         if (!isAdmin) {
             return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
-        if (userService.loadUserByUsername(userDTO.getUserName()) != null) {
-            return ResponseEntity.badRequest().body("Already existing user!");
+        if (userDTO.getUserName() == null)
+        {
+            return ResponseEntity.badRequest().body("UserName can not be empty.");
         }
+        if (userDTO.getEmail() == null)
+        {
+            return ResponseEntity.badRequest().body("Email can not be empty.");
+        }
+        if (userDTO.getPassword() == null)
+        {
+            return ResponseEntity.badRequest().body("Password can not be empty.");
+        }
+
+        if (userDTO.getPassword().length() > 32 || userDTO.getPassword().length() < 8){
+            return ResponseEntity.badRequest().body("Password length must be between 8 and 32.");
+        }
+        if (userDTO.getUserName().length() > 16 || userDTO.getUserName().length() < 5){
+            return ResponseEntity.badRequest().body("Username length must be between 5 and 16.");
+        }
+        if (userDTO.getEmail().length() > 64 || userDTO.getEmail().length() < 5){
+            return ResponseEntity.badRequest().body("Email length must be between 5 and 64.");
+        }
+
+        if (!isValidEmail(userDTO.getEmail())){
+            return ResponseEntity.badRequest().body("Please enter a valid email.");
+        }
+
+
+        if (userService.loadUserByUsername(userDTO.getUserName()) != null) {
+            return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
+        }
+        if (userService.loadUserByEmail(userDTO.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("This email already registered.");
+        }
+
 
         User user = new User();
         user.setUserName(userDTO.getUserName());
@@ -57,7 +91,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers(@RequestParam Map<String, String> params) {
+    public ResponseEntity<?> getAllUsers() {
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
         if (!isAdmin) {
@@ -66,20 +100,18 @@ public class UserController {
 
         List<UserDTO> users = new ArrayList<>();
 
-        if (params.isEmpty()) {
-            for (User user : userService.getAllUsers()) {
-                UserDTO tempUser = new UserDTO();
+        for (User user : userService.getAllUsers()) {
+            UserDTO tempUser = new UserDTO();
 
-                tempUser.setUserId(user.getUserId());
-                tempUser.setUserName(user.getUserName());
-                tempUser.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
-                tempUser.setEmail(user.getEmail());
-                tempUser.setMaxRightsAvailable(user.getMaxRightsAvailable());
-                tempUser.setTotalRightsUsed(user.getTotalRightsUsed());
-                tempUser.setApiKey(user.getApiKey());
+            tempUser.setUserId(user.getUserId());
+            tempUser.setUserName(user.getUserName());
+            tempUser.setIsAdmin(user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN")));
+            tempUser.setEmail(user.getEmail());
+            tempUser.setMaxRightsAvailable(user.getMaxRightsAvailable());
+            tempUser.setTotalRightsUsed(user.getTotalRightsUsed());
+            tempUser.setApiKey(user.getApiKey());
 
-                users.add(tempUser);
-            }
+            users.add(tempUser);
         }
 
         return ResponseEntity.ok(users);
@@ -140,6 +172,7 @@ public class UserController {
     @PutMapping(path = "{id}")
     public ResponseEntity<?> updateUserById(@PathVariable("id") int id, @RequestBody @NonNull UserDTO userDTO) {
 
+        userDTO.setUserId(null);
         boolean isUser = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
         boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
 
@@ -175,15 +208,40 @@ public class UserController {
         }
 
         if (userDTO.getEmail() != null){
+
+            if (userDTO.getEmail().length() > 64 || userDTO.getEmail().length() < 5){
+                return ResponseEntity.badRequest().body("Email length must be between 5 and 64.");
+            }
+
+            if (!isValidEmail(userDTO.getEmail())){
+                return ResponseEntity.badRequest().body("Please enter a valid email.");
+            }
+
+            if (userService.loadUserByEmail(userDTO.getEmail()) != null) {
+                return ResponseEntity.badRequest().body("This email already registered.");
+            }
+
             user.setEmail(userDTO.getEmail());
         }
 
         if (userDTO.getUserName() != null){
+
+            if (userDTO.getUserName().length() > 16 || userDTO.getUserName().length() < 5){
+                return ResponseEntity.badRequest().body("Username length must be between 5 and 16.");
+            }
+
+            if (userService.loadUserByUsername(userDTO.getUserName()) != null) {
+                return ResponseEntity.badRequest().body("There is already a user registered with the username provided");
+            }
             user.setUserName(userDTO.getUserName());
         }
 
         if (userDTO.getPassword() != null){
             isPasswordChanged = true;
+
+            if (userDTO.getPassword().length() > 32 || userDTO.getPassword().length() < 8){
+                return ResponseEntity.badRequest().body("Password length must be between 8 and 32.");
+            }
             user.setPassword(userDTO.getPassword());
         }
 
@@ -212,5 +270,9 @@ public class UserController {
         response.setMaxRightsAvailable(user.getMaxRightsAvailable());
 
         return ResponseEntity.ok(response);
+    }
+    private boolean isValidEmail(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
     }
 }
