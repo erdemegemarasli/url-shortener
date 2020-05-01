@@ -50,7 +50,7 @@ public class RedirectController {
         }).start();
     }
 
-    @Throttling(type = ThrottlingType.RemoteAddr, limit = 100, timeUnit = TimeUnit.MINUTES)
+    @Throttling(type = ThrottlingType.HeaderValue, headerName = "X-Forwarded-For", limit = 10, timeUnit = TimeUnit.MINUTES)
     @GetMapping("{code}")
     public ResponseEntity<?> redirectUrl(@PathVariable("code") String code, @RequestHeader(value = "User-Agent") String userAgent) {
         HttpHeaders responseHeaders = new HttpHeaders();
