@@ -11,11 +11,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+import java.util.UUID;
 
 @RequestMapping("api/v1")
 @RestController
@@ -87,9 +89,6 @@ public class OnboardingController {
         }
 
 
-
-
-
         User user = new User().setUserName(authDTO.getUserName())
                 .setEmail(authDTO.getEmail())
                 .setPassword(authDTO.getPassword());
@@ -108,6 +107,37 @@ public class OnboardingController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("apiKey")
+    public ResponseEntity<?> generateApiKey(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isUser = authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("USER"));
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin && !isUser) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        String userName = authentication.getName();
+        User user = userService.getUserByUserName(userName);
+
+        if (user == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        String apiKey = user.getApiKey();
+
+        if (apiKey != null){
+            return ResponseEntity.badRequest().body("You already have an API Key:" + apiKey);
+        }
+
+        apiKey = generateRandomApiKey();
+        user.setApiKey(apiKey);
+        userService.save(user);
+
+        return ResponseEntity.ok(apiKey);
+    }
+
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -121,5 +151,17 @@ public class OnboardingController {
     private boolean isValidEmail(String email) {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return email.matches(regex);
+    }
+
+    private String generateRandomApiKey() {
+        for (int i = 0; i < 10; i++) {
+            String randomCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
+
+            if (userService.loadUserByApiKey(randomCode) == null) {
+                return randomCode;
+            }
+        }
+
+        return null;
     }
 }

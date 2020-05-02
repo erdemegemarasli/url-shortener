@@ -54,6 +54,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public UserDetails loadUserByApiKey(String apiKey) {
+        User user = userRepository.findByApiKey(apiKey);
+
+        if (user == null)
+            return null;
+
+        List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), true, true, true, true, authorities);
+    }
+
+    @Override
+    public User save(User user){
+        return userRepository.save(user);
+    }
+
+    @Override
     public User save(User user, Boolean isPasswordChanged) {
         Role userRole = roleRepository.findByRoleName("USER");
         if (isPasswordChanged){
