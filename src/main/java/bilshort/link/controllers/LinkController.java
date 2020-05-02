@@ -215,7 +215,13 @@ public class LinkController {
             return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
-        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(linkService.getLinkById(id).getOwner().getUserName()) && !isAdmin){
+        Link link = linkService.getLinkById(id);
+
+        if (link == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals(link.getOwner().getUserName()) && !isAdmin){
             return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
         }
 
