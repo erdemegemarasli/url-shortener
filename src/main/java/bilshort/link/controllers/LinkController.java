@@ -93,7 +93,7 @@ public class LinkController {
 
         Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
                 + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
-        response.setVisitedCount(totalVisitCount);
+        response.setTotalVisitedCount(totalVisitCount);
 
         return ResponseEntity.ok(response);
     }
@@ -124,7 +124,28 @@ public class LinkController {
 
                 Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
                         + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
-                tempLink.setVisitedCount(totalVisitCount);
+                tempLink.setTotalVisitedCount(totalVisitCount);
+
+                tempLink.setVisitedCountFromAndroid(link.getVisitCountFromAndroid());
+                tempLink.setVisitedCountFromWindows(link.getVisitCountFromWindows());
+                tempLink.setVisitedCountFromOsx(link.getVisitCountFromOsx());
+                tempLink.setVisitedCountFromLinux(link.getVisitCountFromLinux());
+                tempLink.setVisitedCountFromIOS(link.getVisitCountFromIOS());
+                tempLink.setVisitedCountFromOtherOs(link.getVisitCountFromOtherOs());
+
+                tempLink.setVisitedCountFromChrome(link.getVisitCountFromChrome());
+                tempLink.setVisitedCountFromFirefox(link.getVisitCountFromFirefox());
+                tempLink.setVisitedCountFromIe(link.getVisitCountFromIE());
+                tempLink.setVisitedCountFromSafari(link.getVisitCountFromSafari());
+                tempLink.setVisitedCountFromOtherBrowser(link.getVisitCountFromOtherBrowser());
+
+                Integer visitCountFromComputer = link.getVisitCountFromLinux() + link.getVisitCountFromOsx()
+                        + link.getVisitCountFromWindows() + link.getVisitCountFromOtherOs();
+
+                Integer visitCountFromMobile = link.getVisitCountFromAndroid() + link.getVisitCountFromIOS();
+
+                tempLink.setVisitedCountFromComputer(visitCountFromComputer);
+                tempLink.setVisitedCountFromMobile(visitCountFromMobile);
 
                 links.add(tempLink);
             }
@@ -171,7 +192,29 @@ public class LinkController {
 
                     Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
                             + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
-                    tempLink.setVisitedCount(totalVisitCount);
+                    tempLink.setTotalVisitedCount(totalVisitCount);
+
+                    tempLink.setVisitedCountFromAndroid(link.getVisitCountFromAndroid());
+                    tempLink.setVisitedCountFromWindows(link.getVisitCountFromWindows());
+                    tempLink.setVisitedCountFromOsx(link.getVisitCountFromOsx());
+                    tempLink.setVisitedCountFromLinux(link.getVisitCountFromLinux());
+                    tempLink.setVisitedCountFromIOS(link.getVisitCountFromIOS());
+                    tempLink.setVisitedCountFromOtherOs(link.getVisitCountFromOtherOs());
+
+                    tempLink.setVisitedCountFromChrome(link.getVisitCountFromChrome());
+                    tempLink.setVisitedCountFromFirefox(link.getVisitCountFromFirefox());
+                    tempLink.setVisitedCountFromIe(link.getVisitCountFromIE());
+                    tempLink.setVisitedCountFromSafari(link.getVisitCountFromSafari());
+                    tempLink.setVisitedCountFromOtherBrowser(link.getVisitCountFromOtherBrowser());
+
+                    Integer visitCountFromComputer = link.getVisitCountFromLinux() + link.getVisitCountFromOsx()
+                            + link.getVisitCountFromWindows() + link.getVisitCountFromOtherOs();
+
+                    Integer visitCountFromMobile = link.getVisitCountFromAndroid() + link.getVisitCountFromIOS();
+
+                    tempLink.setVisitedCountFromComputer(visitCountFromComputer);
+                    tempLink.setVisitedCountFromMobile(visitCountFromMobile);
+
 
                     links.add(tempLink);
                 }
@@ -217,7 +260,28 @@ public class LinkController {
 
         Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
                 + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
-        response.setVisitedCount(totalVisitCount);
+        response.setTotalVisitedCount(totalVisitCount);
+
+        response.setVisitedCountFromAndroid(link.getVisitCountFromAndroid());
+        response.setVisitedCountFromWindows(link.getVisitCountFromWindows());
+        response.setVisitedCountFromOsx(link.getVisitCountFromOsx());
+        response.setVisitedCountFromLinux(link.getVisitCountFromLinux());
+        response.setVisitedCountFromIOS(link.getVisitCountFromIOS());
+        response.setVisitedCountFromOtherOs(link.getVisitCountFromOtherOs());
+
+        response.setVisitedCountFromChrome(link.getVisitCountFromChrome());
+        response.setVisitedCountFromFirefox(link.getVisitCountFromFirefox());
+        response.setVisitedCountFromIe(link.getVisitCountFromIE());
+        response.setVisitedCountFromSafari(link.getVisitCountFromSafari());
+        response.setVisitedCountFromOtherBrowser(link.getVisitCountFromOtherBrowser());
+
+        Integer visitCountFromComputer = link.getVisitCountFromLinux() + link.getVisitCountFromOsx()
+                + link.getVisitCountFromWindows() + link.getVisitCountFromOtherOs();
+
+        Integer visitCountFromMobile = link.getVisitCountFromAndroid() + link.getVisitCountFromIOS();
+
+        response.setVisitedCountFromComputer(visitCountFromComputer);
+        response.setVisitedCountFromMobile(visitCountFromMobile);
 
         return ResponseEntity.ok(response);
     }

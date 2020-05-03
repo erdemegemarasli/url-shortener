@@ -16,7 +16,22 @@ public class LinkDTO implements Serializable {
     private String description;
     private Integer linkId;
     private String userName;
-    private Integer visitedCount;
+    private Integer totalVisitedCount;
+    private Integer visitedCountFromChrome;
+    private Integer visitedCountFromFirefox;
+    private Integer visitedCountFromSafari;
+    private Integer visitedCountFromIe;
+    private Integer visitedCountFromOtherBrowser;
+    private Integer visitedCountFromWindows;
+    private Integer visitedCountFromOsx;
+    private Integer visitedCountFromLinux;
+    private Integer visitedCountFromIOS;
+    private Integer visitedCountFromAndroid;
+    private Integer visitedCountFromOtherOs;
+    private Integer visitedCountFromComputer;
+    private Integer visitedCountFromMobile;
+
+
 
     public LinkDTO() {
     }
@@ -69,11 +84,115 @@ public class LinkDTO implements Serializable {
         this.description = description;
     }
 
-    public Integer getVisitedCount() {
-        return visitedCount;
+    public Integer getTotalVisitedCount() {
+        return totalVisitedCount;
     }
 
-    public void setVisitedCount(Integer visitedCount) {
-        this.visitedCount = visitedCount;
+    public void setTotalVisitedCount(Integer totalVisitedCount) {
+        this.totalVisitedCount = totalVisitedCount;
+    }
+
+    public Integer getVisitedCountFromChrome() {
+        return visitedCountFromChrome;
+    }
+
+    public void setVisitedCountFromChrome(Integer visitedCountFromChrome) {
+        this.visitedCountFromChrome = visitedCountFromChrome;
+    }
+
+    public Integer getVisitedCountFromFirefox() {
+        return visitedCountFromFirefox;
+    }
+
+    public void setVisitedCountFromFirefox(Integer visitedCountFromFirefox) {
+        this.visitedCountFromFirefox = visitedCountFromFirefox;
+    }
+
+    public Integer getVisitedCountFromSafari() {
+        return visitedCountFromSafari;
+    }
+
+    public void setVisitedCountFromSafari(Integer visitedCountFromSafari) {
+        this.visitedCountFromSafari = visitedCountFromSafari;
+    }
+
+    public Integer getVisitedCountFromIe() {
+        return visitedCountFromIe;
+    }
+
+    public void setVisitedCountFromIe(Integer visitedCountFromIe) {
+        this.visitedCountFromIe = visitedCountFromIe;
+    }
+
+    public Integer getVisitedCountFromOtherBrowser() {
+        return visitedCountFromOtherBrowser;
+    }
+
+    public void setVisitedCountFromOtherBrowser(Integer visitedCountFromOtherBrowser) {
+        this.visitedCountFromOtherBrowser = visitedCountFromOtherBrowser;
+    }
+
+    public Integer getVisitedCountFromWindows() {
+        return visitedCountFromWindows;
+    }
+
+    public void setVisitedCountFromWindows(Integer visitedCountFromWindows) {
+        this.visitedCountFromWindows = visitedCountFromWindows;
+    }
+
+    public Integer getVisitedCountFromOsx() {
+        return visitedCountFromOsx;
+    }
+
+    public void setVisitedCountFromOsx(Integer visitedCountFromOsx) {
+        this.visitedCountFromOsx = visitedCountFromOsx;
+    }
+
+    public Integer getVisitedCountFromLinux() {
+        return visitedCountFromLinux;
+    }
+
+    public void setVisitedCountFromLinux(Integer visitedCountFromLinux) {
+        this.visitedCountFromLinux = visitedCountFromLinux;
+    }
+
+    public Integer getVisitedCountFromIOS() {
+        return visitedCountFromIOS;
+    }
+
+    public void setVisitedCountFromIOS(Integer visitedCountFromIOS) {
+        this.visitedCountFromIOS = visitedCountFromIOS;
+    }
+
+    public Integer getVisitedCountFromAndroid() {
+        return visitedCountFromAndroid;
+    }
+
+    public void setVisitedCountFromAndroid(Integer visitedCountFromAndroid) {
+        this.visitedCountFromAndroid = visitedCountFromAndroid;
+    }
+
+    public Integer getVisitedCountFromOtherOs() {
+        return visitedCountFromOtherOs;
+    }
+
+    public void setVisitedCountFromOtherOs(Integer visitedCountFromOtherOs) {
+        this.visitedCountFromOtherOs = visitedCountFromOtherOs;
+    }
+
+    public Integer getVisitedCountFromComputer() {
+        return visitedCountFromComputer;
+    }
+
+    public void setVisitedCountFromComputer(Integer visitedCountFromComputer) {
+        this.visitedCountFromComputer = visitedCountFromComputer;
+    }
+
+    public Integer getVisitedCountFromMobile() {
+        return visitedCountFromMobile;
+    }
+
+    public void setVisitedCountFromMobile(Integer visitedCountFromMobile) {
+        this.visitedCountFromMobile = visitedCountFromMobile;
     }
 }
