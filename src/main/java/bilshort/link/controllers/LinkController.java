@@ -84,6 +84,10 @@ public class LinkController {
         linkDTO.setUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         Link link = linkService.createShortLink(linkDTO);
 
+        if (link == null){
+            return ResponseEntity.badRequest().body("Wrong Input Format");
+        }
+
         LinkDTO response = new LinkDTO();
         response.setExpTime(link.getExpTime());
         response.setUrl(link.getUrl());
@@ -382,6 +386,10 @@ public class LinkController {
         }
 
         link = linkService.updateLink(link);
+
+        if (link == null){
+            return ResponseEntity.badRequest().body("Wrong Input Format");
+        }
 
         LinkDTO response = new LinkDTO();
 

@@ -6,6 +6,7 @@ import bilshort.link.repositories.LinkRepository;
 import bilshort.user.models.User;
 import bilshort.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -37,13 +38,24 @@ public class LinkServiceImpl implements LinkService {
             calendar.setTime(date);
             calendar.add(Calendar.DATE, 7);
 
-            link.setExpTime(calendar.getTime().getTime());
+            link.setExpTime(calendar.getTime().getTime() / 1000);
         }
         else {
-            link.setExpTime(linkDTO.getExpTime());
+            String expTimeHandler = "" + linkDTO.getExpTime();
+            if (expTimeHandler.length() < 10){
+                return null;
+            }
+            Long expTime = Long.parseLong(expTimeHandler.substring(0, 10));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            if (expTime < calendar.getTime().getTime() / 1000){
+                return null;
+            }
+            link.setExpTime(expTime);
         }
 
-        link.setCreatedAt(date.getTime());
+        link.setCreatedAt(date.getTime() / 1000);
 
         if (linkDTO.getUserName().equals("anonymousUser")) {
             User user = new User();
@@ -75,6 +87,19 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     public Link updateLink(Link link) {
+        Date date = new Date();
+        String expTimeHandler = "" + link.getExpTime();
+        if (expTimeHandler.length() < 10){
+            return null;
+        }
+        Long expTime = Long.parseLong(expTimeHandler.substring(0, 10));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        if (expTime < calendar.getTime().getTime() / 1000){
+            return null;
+        }
+        link.setExpTime(expTime);
         return linkRepository.save(link);
     }
 
