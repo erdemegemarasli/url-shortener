@@ -91,6 +91,10 @@ public class LinkController {
         response.setLinkId(link.getLinkId());
         response.setDescription(link.getDescription());
 
+        Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
+                + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
+        response.setVisitedCount(totalVisitCount);
+
         return ResponseEntity.ok(response);
     }
 
@@ -117,6 +121,10 @@ public class LinkController {
                 tempLink.setLinkId(link.getLinkId());
                 tempLink.setUserName(link.getOwner().getUserName());
                 tempLink.setDescription(link.getDescription());
+
+                Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
+                        + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
+                tempLink.setVisitedCount(totalVisitCount);
 
                 links.add(tempLink);
             }
@@ -161,6 +169,10 @@ public class LinkController {
                     tempLink.setUserName(link.getOwner().getUserName());
                     tempLink.setDescription(link.getDescription());
 
+                    Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
+                            + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
+                    tempLink.setVisitedCount(totalVisitCount);
+
                     links.add(tempLink);
                 }
             }
@@ -202,6 +214,10 @@ public class LinkController {
         response.setLinkId(link.getLinkId());
         response.setUserName(link.getOwner().getUserName());
         response.setDescription(link.getDescription());
+
+        Integer totalVisitCount = link.getVisitCountFromChrome() + link.getVisitCountFromFirefox()
+                + link.getVisitCountFromIE() + link.getVisitCountFromSafari() + link.getVisitCountFromOtherBrowser();
+        response.setVisitedCount(totalVisitCount);
 
         return ResponseEntity.ok(response);
     }

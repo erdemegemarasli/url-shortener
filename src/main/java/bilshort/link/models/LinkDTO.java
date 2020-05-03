@@ -16,6 +16,7 @@ public class LinkDTO implements Serializable {
     private String description;
     private Integer linkId;
     private String userName;
+    private Integer visitedCount;
 
     public LinkDTO() {
     }
@@ -66,5 +67,13 @@ public class LinkDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getVisitedCount() {
+        return visitedCount;
+    }
+
+    public void setVisitedCount(Integer visitedCount) {
+        this.visitedCount = visitedCount;
     }
 }
