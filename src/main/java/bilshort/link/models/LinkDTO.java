@@ -30,6 +30,7 @@ public class LinkDTO implements Serializable {
     private Integer visitedCountFromOtherOs;
     private Integer visitedCountFromComputer;
     private Integer visitedCountFromMobile;
+    private Long createdAt;
 
 
 
@@ -194,5 +195,13 @@ public class LinkDTO implements Serializable {
 
     public void setVisitedCountFromMobile(Integer visitedCountFromMobile) {
         this.visitedCountFromMobile = visitedCountFromMobile;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 }

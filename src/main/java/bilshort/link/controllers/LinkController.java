@@ -151,6 +151,8 @@ public class LinkController {
                 tempLink.setVisitedCountFromComputer(visitCountFromComputer);
                 tempLink.setVisitedCountFromMobile(visitCountFromMobile);
 
+                tempLink.setCreatedAt(link.getCreatedAt());
+
                 links.add(tempLink);
             }
         }
