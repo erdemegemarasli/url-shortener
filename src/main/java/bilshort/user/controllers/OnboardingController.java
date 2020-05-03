@@ -45,6 +45,9 @@ public class OnboardingController {
         AuthDTO authDTO = new AuthDTO(token);
         authDTO.setUserId(user.getUserId());
         authDTO.setUserName(user.getUserName());
+        Boolean isAdmin = user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN"));
+        authDTO.setIsAdmin(isAdmin);
+
         return ResponseEntity.ok(authDTO);
     }
 

@@ -15,6 +15,7 @@ public class AuthDTO implements Serializable {
     private String password;
     private String token;
     private Integer userId;
+    private Boolean isAdmin;
 
     public AuthDTO() {
     }
@@ -65,6 +66,15 @@ public class AuthDTO implements Serializable {
 
     public AuthDTO setUserId(Integer userId) {
         this.userId = userId;
+        return this;
+    }
+
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public AuthDTO setIsAdmin(Boolean admin) {
+        this.isAdmin = admin;
         return this;
     }
 }
