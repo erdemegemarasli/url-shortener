@@ -3,6 +3,7 @@ package bilshort.link.controllers;
 import bilshort.link.models.Link;
 import bilshort.link.models.LinkDTO;
 import bilshort.link.services.LinkService;
+import bilshort.user.models.User;
 import bilshort.user.services.UserService;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,13 @@ public class LinkController {
             return ResponseEntity.badRequest().body("Given URL is invalid!");
         }
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByUserName(username);
+
+        if (user.getTotalRightsUsed() >= user.getMaxRightsAvailable()){
+            return ResponseEntity.badRequest().body("Maximum available links is reached, delete some before creating new ones!");
+        }
+
         if (linkDTO.getCode() == null) { // Random
             String randomCode = generateRandomCode();
 
@@ -83,6 +91,9 @@ public class LinkController {
 
         linkDTO.setUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         Link link = linkService.createShortLink(linkDTO);
+
+        user.setTotalRightsUsed(user.getTotalRightsUsed() + 1);
+        userService.save(user);
 
         if (link == null){
             return ResponseEntity.badRequest().body("Wrong Input Format");
@@ -311,10 +322,15 @@ public class LinkController {
 
         Long operationCode = linkService.deleteLinkById(id);
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByUserName(username);
+
         if (operationCode == 0) {
             return ResponseEntity.notFound().build();
         }
         else if (operationCode == 1) {
+            user.setTotalRightsUsed(user.getTotalRightsUsed() - 1);
+            userService.save(user);
             return ResponseEntity.ok().body("Deletion Successful");
         }
 

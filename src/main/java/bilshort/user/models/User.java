@@ -40,7 +40,7 @@ public class User {
     @Column(name = "total_rights_used", columnDefinition = "int default 0")
     private int totalRightsUsed;
 
-    @Column(name = "max_rights_available", columnDefinition = "int default 10")
+    @Column(name = "max_rights_available", columnDefinition = "int default 30")
     private int maxRightsAvailable;
 
     public Integer getUserId() {
@@ -99,8 +99,9 @@ public class User {
         return maxRightsAvailable;
     }
 
-    public void setMaxRightsAvailable(int maxRightsAvailable) {
+    public User setMaxRightsAvailable(int maxRightsAvailable) {
         this.maxRightsAvailable = maxRightsAvailable;
+        return this;
     }
 
     public String getEmail() {

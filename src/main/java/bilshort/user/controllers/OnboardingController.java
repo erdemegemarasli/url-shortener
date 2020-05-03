@@ -91,10 +91,11 @@ public class OnboardingController {
             return ResponseEntity.badRequest().body("This email already registered.");
         }
 
-
-        User user = new User().setUserName(authDTO.getUserName())
+        User user = new User()
+                .setUserName(authDTO.getUserName())
                 .setEmail(authDTO.getEmail())
-                .setPassword(authDTO.getPassword());
+                .setPassword(authDTO.getPassword())
+                .setMaxRightsAvailable(30);
 
         user = userService.save(user, true);
 
@@ -136,6 +137,7 @@ public class OnboardingController {
 
         apiKey = generateRandomApiKey();
         user.setApiKey(apiKey);
+        user.setMaxRightsAvailable(60);
         userService.save(user);
 
         return ResponseEntity.ok(apiKey);
