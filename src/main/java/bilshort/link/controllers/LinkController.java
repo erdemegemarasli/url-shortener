@@ -63,7 +63,7 @@ public class LinkController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByUserName(username);
 
-        if (user.getTotalRightsUsed() >= user.getMaxRightsAvailable()){
+        if (user != null && user.getTotalRightsUsed() >= user.getMaxRightsAvailable()){
             return ResponseEntity.badRequest().body("Maximum available links is reached, delete some before creating new ones!");
         }
 
@@ -92,8 +92,10 @@ public class LinkController {
         linkDTO.setUserName(SecurityContextHolder.getContext().getAuthentication().getName());
         Link link = linkService.createShortLink(linkDTO);
 
-        user.setTotalRightsUsed(user.getTotalRightsUsed() + 1);
-        userService.save(user);
+        if (user != null){
+            user.setTotalRightsUsed(user.getTotalRightsUsed() + 1);
+            userService.save(user);
+        }
 
         if (link == null){
             return ResponseEntity.badRequest().body("Wrong Input Format");
