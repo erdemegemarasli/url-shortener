@@ -16,6 +16,7 @@ public class AnalyticsController {
     private static RestTemplate restTemplate;
     private static String browserURL;
     private static String osURL;
+    private static String deviceURL;
 
     @Value("${analytics.url}")
     private String url;
@@ -29,6 +30,9 @@ public class AnalyticsController {
 
         String osEndpoint = "/count/os";
         osURL = url + osEndpoint;
+
+        String deviceEndpoint = "/count/device";
+        deviceURL = url + deviceEndpoint;
     }
 
 
@@ -40,6 +44,11 @@ public class AnalyticsController {
     @GetMapping("/count/os")
     public ResponseEntity<?> getOsCountBetweenDays(@RequestParam Map<String, String> params) {
         return sendRequest(params, osURL);
+    }
+
+    @GetMapping("/count/device")
+    public ResponseEntity<?> getDeviceCountBetweenDays(@RequestParam Map<String, String> params) {
+        return sendRequest(params, deviceURL);
     }
 
     private ResponseEntity<?> sendRequest(@RequestParam Map<String, String> params, String requestURL) {
