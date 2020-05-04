@@ -14,6 +14,7 @@ import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RequestMapping("api/v1/user")
 @RestController
@@ -169,6 +170,35 @@ public class UserController {
         return ResponseEntity.badRequest().body("Unexpected Error");
     }
 
+    @PutMapping(path = "{id}/apiKey")
+    public ResponseEntity<?> changeApiKey(@PathVariable("id") int id){
+
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin) {
+            return ResponseEntity.badRequest().body("You don't have authorization for this operation.");
+        }
+
+        User user = userService.getUserById(id);
+
+        if (user == null){
+            return ResponseEntity.badRequest().body("No such user found with id " + id + ".");
+        }
+
+        String apiKey = generateRandomApiKey();
+
+        if (apiKey == null){
+            return ResponseEntity.badRequest().body("An unexpected error occurred, try again.");
+        }
+
+        user.setApiKey(apiKey);
+        user.setMaxRightsAvailable(60);
+        userService.save(user);
+
+        return ResponseEntity.ok(apiKey);
+    }
+
+
     @PutMapping(path = "{id}")
     public ResponseEntity<?> updateUserById(@PathVariable("id") int id, @RequestBody @NonNull UserDTO userDTO) {
 
@@ -271,8 +301,21 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+
     private boolean isValidEmail(String email) {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return email.matches(regex);
+    }
+
+    private String generateRandomApiKey() {
+        for (int i = 0; i < 10; i++) {
+            String randomCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
+
+            if (userService.loadUserByApiKey(randomCode) == null) {
+                return randomCode;
+            }
+        }
+
+        return null;
     }
 }
