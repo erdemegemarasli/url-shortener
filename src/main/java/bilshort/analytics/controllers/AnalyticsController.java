@@ -2,9 +2,7 @@ package bilshort.analytics.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -35,6 +33,11 @@ public class AnalyticsController {
         deviceURL = url + deviceEndpoint;
     }
 
+    @PostMapping("/generate")
+    public ResponseEntity<?> generateValues(@RequestBody Map<String, Object> body){
+        String generateUrl = url + "/generate";
+        return restTemplate.postForEntity(generateUrl, body, Object.class);
+    }
 
     @GetMapping("/count/browser")
     public ResponseEntity<?> getBrowserCountBetweenDays(@RequestParam Map<String, String> params) {
